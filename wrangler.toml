@@ -1,0 +1,37 @@
+name = "cf-nexus"
+compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
+
+[vars]
+ENVIRONMENT = "production"
+ISSUER = "https://nexus.example.com"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "nexus-db"
+database_id = ""  # Fill after creation with: wrangler d1 create nexus-db
+
+# KV Namespace
+[[kv_namespaces]]
+binding = "KV"
+id = ""  # Fill after creation with: wrangler kv:namespace create KV
+
+# Durable Objects
+[[durable_objects.bindings]]
+name = "USER_DO"
+class_name = "UserDurableObject"
+script_name = "cf-nexus"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["UserDurableObject"]
+
+# Environment-specific configs
+[env.staging]
+name = "cf-nexus-staging"
+vars = { ENVIRONMENT = "staging", ISSUER = "https://staging.nexus.example.com" }
+
+[env.development]
+name = "cf-nexus-dev"
+vars = { ENVIRONMENT = "development", ISSUER = "http://localhost:8787" }

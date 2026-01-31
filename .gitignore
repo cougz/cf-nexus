@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+coverage/
+playwright-report/
+playwright/.cache/
+.env
+*.log
+.DS_Store
