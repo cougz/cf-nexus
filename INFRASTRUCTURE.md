@@ -21,8 +21,8 @@ The following GitHub secrets are required for CI/CD:
     - **Account → D1 → Edit**
     - **Account → Cloudflare Pages → Edit**
     - **Account → KV → Edit**
-    - **Account → User → Read**
     - **Account → Account Settings → Read**
+  - **Note:** If CI fails with error code 10001, the token may be expired or invalid. Generate a new token.
 - **CLOUDFLARE_ACCOUNT_ID**
   - Found at: https://dash.cloudflare.com (in URL or profile page)
 - **JWT_PRIVATE_KEY** (optional but recommended)
