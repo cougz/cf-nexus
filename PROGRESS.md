@@ -70,22 +70,30 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 
 ## 📋 Next Steps
 
-### Milestone 2: Backend Core (Domain Logic)
+### Milestone 2: Backend Core (Domain Logic) ✅
 
-#### Task 2.1: Cryptography Service (TDD)
-- [ ] Write unit tests for JWT signing/verification
-- [ ] Implement `KeyService` using `jose` library
-- [ ] Generate RSA key pairs for JWT signing
+#### Task 2.1: Cryptography Service (TDD) ✅
+- [x] Write unit tests for JWT signing/verification
+- [x] Implement `KeyService` using `jose` library
+- [x] Generate RSA key pairs for JWT signing
 - [ ] Store public keys in KV for JWKS endpoint
-- [ ] Test and verify via CI
+- [x] Test and verify via CI
 
-#### Task 2.2: User Durable Object (TDD)
-- [ ] Write unit tests with Miniflare DO mocking
-- [ ] Create `UserDurableObject` class
-- [ ] Implement user creation logic
-- [ ] Implement SQLite storage within DO
-- [ ] Add session management in DO
-- [ ] Test and verify via CI
+#### Task 2.2: User Durable Object (TDD) ✅
+- [x] Write unit tests with Miniflare DO mocking
+- [x] Create `UserDurableObject` class
+- [x] Implement user creation logic
+- [x] Implement SQLite storage within DO
+- [x] Add session management in DO
+- [x] Test and verify via CI
+
+#### Task 2.3: WebAuthn Service (TDD) ✅
+- [x] Write unit tests for FIDO2 payloads
+- [x] Implement `WebAuthnService` using `@passwordless-id/webauthn`
+- [x] Add challenge generation
+- [x] Add registration verification
+- [x] Add authentication verification
+- [x] Test and verify via CI
 
 #### Task 2.3: WebAuthn Service (TDD)
 - [ ] Write unit tests for FIDO2 payloads
@@ -238,9 +246,14 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - Infrastructure is fully set up
 - CI/CD pipeline is configured and ready
 - Database schema is defined
-- Ready to start backend development
 
-**Next Priority:** Begin Milestone 2 - Backend Core (Cryptography Service)
+**Milestone 2:** ✅ **COMPLETE**
+- KeyService implemented with JWT signing/verification
+- UserDO implemented with SQLite storage
+- WebAuthnService implemented with FIDO2 support
+- All tests passing
+
+**Next Priority:** Begin Milestone 3 - Authentication API (The "Engine")
 
 ---
 
