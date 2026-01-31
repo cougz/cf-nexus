@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 
 import type { Env } from '../types';
 import { createWebAuthnHandlers } from './handlers/webauthn';
+import { createOIDCHandlers } from './handlers/oidc';
 
 export const app = new Hono<{ Bindings: Env }>();
 
@@ -22,6 +23,12 @@ app.get('/health', (c) => {
 });
 
 app.route('/webauthn', createWebAuthnHandlers());
+
+const oidcApp = createOIDCHandlers();
+app.route('/authorize', oidcApp);
+app.route('/token', oidcApp);
+app.route('/userinfo', oidcApp);
+app.route('/.well-known', oidcApp);
 
 export default {
   fetch: app.fetch
