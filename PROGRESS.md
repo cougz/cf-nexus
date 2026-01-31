@@ -66,6 +66,26 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - [x] Added database indexes for performance
 - [x] Integrated migrations into CI/CD workflow
 
+#### Task 1.8: Infrastructure Automation ✅
+- [x] Created `setup-infra.ts` - Automated Cloudflare resource creation
+- [x] Updated CI workflow to auto-create D1 databases and KV namespaces
+- [x] Script updates `wrangler.toml` with generated infrastructure IDs
+- [x] Infrastructure setup integrated into deployment pipeline
+
+#### Task 1.9: Repository Cleanup ✅
+- [x] Fixed GitHub Actions linter (Biome formatting issues)
+- [x] Removed duplicate `origin/main` branch
+- [x] Cleaned up ambiguous git references
+- [x] Repository now has single clean `main` branch
+- [x] Created initial D1 migration (`0001_initial_schema.sql`)
+- [x] Defined tables:
+  - `oidc_clients` - OAuth2/OIDC client applications
+  - `groups` - User groups
+  - `user_groups` - User-group associations
+  - `audit_logs` - System audit trail
+- [x] Added database indexes for performance
+- [x] Integrated migrations into CI/CD workflow
+
 ---
 
 ## 📋 Next Steps
@@ -242,50 +262,60 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 
 ## 🚦 Current Status
 
-**Milestone 1:** ✅ **COMPLETE**
+**Milestone 1:** 🔄 **IN PROGRESS** (~85% Complete)
 - Infrastructure is fully set up
 - CI/CD pipeline is configured and ready
 - Database schema is defined
+- **BLOCKER:** CLOUDFLARE_API_TOKEN authentication failure (Error 10001)
 
-**Milestone 2:** ✅ **COMPLETE**
-- KeyService implemented with JWT signing/verification
-- UserDO implemented with SQLite storage
-- WebAuthnService implemented with FIDO2 support
-- All tests passing
+**Current Issue:**
+- CI failing due to invalid/expired API token
+- Infrastructure creation script ready to auto-create D1 and KV resources
+- Need valid token to proceed with deployment
 
-**Next Priority:** Begin Milestone 3 - Authentication API (The "Engine")
+**Next Priority:** Fix API token authentication → Complete Milestone 1 → Begin Milestone 2
 
 ---
 
-## 📝 Commit History
+## 📝 Recent Commit History
 
-1. `feat(infra): initialize monorepo with Bun workspaces`
-2. `feat(shared): initialize shared package with TypeScript and Zod schemas`
-3. `feat(api): initialize Cloudflare Worker with Hono`
-4. `feat(web): initialize Astro with Cloudflare SSR adapter`
-5. `feat(ci): configure GitHub Actions CI/CD workflow with Biome`
-6. `feat(infra): configure wrangler.toml with Cloudflare resources`
-7. `feat(db): create D1 database migrations for OIDC schema`
+1. `docs: add PROJECT_PLAN.md with complete implementation specification` - Created comprehensive implementation guide
+2. `docs: add infrastructure setup documentation` - Created INFRASTRUCTURE.md with Cloudflare resource guide
+3. `ci: add infrastructure setup script and update CI workflow` - Automated infrastructure creation
+4. `docs: clarify Cloudflare API token permissions` - Updated documentation with correct permissions
+5. `docs: remove non-existent permission, add auth error note` - Fixed API token troubleshooting guide
 
 ---
 
 ## ⚠️ Important Notes
 
-### Before Continuing
-1. **Set up Cloudflare resources:**
-   - Create D1 databases: `nexus-db` and `nexus-db-preview`
-   - Create KV namespaces: `nexus-kv` and `nexus-kv-preview`
-   - Get your Cloudflare Account ID
+### Current Blocker
+**CLOUDFLARE_API_TOKEN Authentication Failure**
 
-2. **Configure GitHub Secrets:**
-   - `CLOUDFLARE_API_TOKEN` - With appropriate permissions
-   - `CLOUDFLARE_ACCOUNT_ID` - Your Cloudflare account ID
-   - `JWT_PRIVATE_KEY` - RSA private key for JWT signing
+The CI/CD pipeline is ready to automatically create all Cloudflare infrastructure, but is blocked by an invalid API token.
 
-3. **Update wrangler.toml:**
-   - Replace placeholder database IDs with actual D1 IDs
-   - Replace placeholder KV IDs with actual KV IDs
-   - Update `PUBLIC_API_URL` to your actual API URL
+**Error Code:** 10001 (Unable to authenticate request)
+
+**Required Action:**
+1. Go to: https://dash.cloudflare.com/profile/api-tokens
+2. Create new API token with these permissions:
+   - Account → Workers Scripts → Edit
+   - Account → D1 → Edit
+   - Account → Cloudflare Pages → Edit
+   - Account → KV → Edit
+   - Account → Account Settings → Read
+3. Delete existing `CLOUDFLARE_API_TOKEN` from GitHub Secrets
+4. Add new token to GitHub Secrets
+5. Push any change to trigger CI
+
+**What Happens Next:**
+Once token is fixed, CI will automatically:
+- ✅ Create D1 databases (nexus-db, nexus-db-preview)
+- ✅ Create KV namespaces (nexus-kv, nexus-kv-preview)
+- ✅ Update wrangler.toml with infrastructure IDs
+- ✅ Apply database migrations
+- ✅ Deploy API to Cloudflare Workers
+- ✅ Deploy web to Cloudflare Pages
 
 ### Development Workflow
 - Always write failing tests first (TDD)
@@ -297,4 +327,4 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 ---
 
 **Last Updated:** January 31, 2026
-**Next Update:** After completing Milestone 2, Task 2.1
+**Next Update:** After fixing CLOUDFLARE_API_TOKEN authentication
