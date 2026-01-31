@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import type { Env } from '../types';
 import { createWebAuthnHandlers } from './handlers/webauthn';
 import { createOIDCHandlers } from './handlers/oidc';
+import { UserDurableObject } from './durable-objects/user';
 
 export const app = new Hono<{ Bindings: Env }>();
 
@@ -29,6 +30,8 @@ app.route('/authorize', oidcApp);
 app.route('/token', oidcApp);
 app.route('/userinfo', oidcApp);
 app.route('/.well-known', oidcApp);
+
+export { UserDurableObject };
 
 export default {
   fetch: app.fetch
