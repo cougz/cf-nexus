@@ -61,16 +61,44 @@ export function createOIDCHandlers() {
     const { client_id, redirect_uri, response_type, scope, state, nonce, code_challenge, code_challenge_method } = c.req.query();
 
     if (response_type !== 'code') {
-      return c.redirect(302, `${redirect_uri}?error=unsupported_response_type`);
+      const errorUrl = `${redirect_uri}?error=unsupported_response_type`;
+      c.header('Location', errorUrl);
+      return c.body(null, 302);
     }
 
     const sessionCookie = c.req.header('Cookie')?.match(/session=([^;]+)/);
     if (sessionCookie) {
       const sessionId = sessionCookie[1];
-      return c.redirect(302, `${redirect_uri}?code=authorized&state=${state}`);
+      let successUrl = `${redirect_uri}?code=authorized`;
+      if (state) {
+        successUrl += `&state=${state}`;
+      }
+      c.header('Location', successUrl);
+      return c.body(null, 302);
     }
 
-    return c.redirect(302, `/login?redirect=${encodeURIComponent(redirect_uri)}&client_id=${client_id}&scope=${scope}&state=${state}&nonce=${nonce}`);
+    let loginUrl = `/login`;
+    const params = new URLSearchParams();
+    if (redirect_uri) {
+      params.set('redirect', redirect_uri);
+    }
+    if (client_id) {
+      params.set('client_id', client_id);
+    }
+    if (scope) {
+      params.set('scope', scope);
+    }
+    if (state) {
+      params.set('state', state);
+    }
+    if (nonce) {
+      params.set('nonce', nonce);
+    }
+    if (params.toString()) {
+      loginUrl += `?${params.toString()}`;
+    }
+    c.header('Location', loginUrl);
+    return c.body(null, 302);
   });
 
   app.post('/token', async (c) => {

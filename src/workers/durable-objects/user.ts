@@ -94,7 +94,12 @@ export class UserDurableObject {
         WHERE username = ?
       `, [username]);
 
-      const result = cursor.first();
+      let result = null;
+      for await (const row of cursor) {
+        result = row;
+        break;
+      }
+
       if (!result) {
         return null;
       }
@@ -120,7 +125,12 @@ export class UserDurableObject {
         WHERE id = ?
       `, [userId]);
 
-      const result = cursor.first();
+      let result = null;
+      for await (const row of cursor) {
+        result = row;
+        break;
+      }
+
       if (!result) {
         return null;
       }
@@ -215,7 +225,12 @@ export class UserDurableObject {
       WHERE credential_id = ?
     `, [credentialId]);
 
-    const result = cursor.first();
+    let result = null;
+    for await (const row of cursor) {
+      result = row;
+      break;
+    }
+
     if (!result) {
       return null;
     }
@@ -271,7 +286,12 @@ export class UserDurableObject {
       WHERE challenge = ?
     `, [challenge]);
 
-    const result = cursor.first();
+    let result = null;
+    for await (const row of cursor) {
+      result = row;
+      break;
+    }
+
     if (!result) {
       return null;
     }
@@ -320,7 +340,12 @@ export class UserDurableObject {
       WHERE id = ?
     `, [sessionId]);
 
-    const result = cursor.first();
+    let result = null;
+    for await (const row of cursor) {
+      result = row;
+      break;
+    }
+
     if (!result) {
       return null;
     }

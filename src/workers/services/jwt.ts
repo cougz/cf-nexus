@@ -1,31 +1,28 @@
-import { SignJWT, jwtVerify, exportJWK, importKey } from 'jose';
+import { SignJWT, jwtVerify, exportJWK } from 'jose';
 import type { JWKS, JWKKey } from '../../types';
 import { arrayBufferToBase64Url } from './crypto';
 
 const JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY || '';
 const ISSUER = process.env.ISSUER || 'http://localhost:8788';
 
-let privateKeyObj: KeyObject | null = null;
+let privateKey: any = null;
 let cachedJWK: JWKKey | null = null;
 
-async function getPrivateKey(): Promise<KeyObject> {
-  if (privateKeyObj) {
-    return privateKeyObj;
+async function getPrivateKey() {
+  if (privateKey) {
+    return privateKey;
   }
 
   if (!JWT_PRIVATE_KEY) {
     throw new Error('JWT_PRIVATE_KEY not configured');
   }
 
-  const binary = Uint8Array.from(
-    atob(JWT_PRIVATE_KEY.replace(/-----BEGIN PRIVATE KEY-----/g, '')
-      .replace(/-----END PRIVATE KEY-----/g, '')
-      .replace(/\n/g, '')), 
-    c => c.charCodeAt(0)
-  );
+  return JWT_PRIVATE_KEY;
+}
 
-  privateKeyObj = await importKey('pkcs8', binary.buffer, { extractable: false }, 'private');
-  return privateKeyObj;
+async function getPublicKey() {
+  const privateKey = await getPrivateKey();
+  return (privateKey as any).publicKey;
 }
 
 export async function signIdToken(
@@ -77,12 +74,8 @@ export async function signAccessToken(
 
 export async function verifyToken(token: string): Promise<any> {
   try {
-    const privateKey = await getPrivateKey();
-    const publicKey = await privateKey.export({ format: 'spki' });
-    
-    const publicCryptoKey = await importKey('spki', publicKey, { extractable: false }, 'public');
-    
-    const { payload } = await jwtVerify(token, publicCryptoKey, {
+    const publicKey = await getPublicKey();
+    const { payload } = await jwtVerify(token, publicKey, {
       issuer: ISSUER,
       algorithms: ['RS256']
     });
@@ -99,9 +92,8 @@ export async function getJWKS(): Promise<JWKS> {
     return { keys: [cachedJWK] };
   }
 
-  const privateKey = await getPrivateKey();
-  const publicKey = await privateKey.export({ format: 'spki' });
-  const jwk = await exportJWK(await importKey('spki', publicKey, { extractable: false }, 'public'));
+  const publicKey = await getPublicKey();
+  const jwk = await exportJWK(publicKey);
   
   const kid = arrayBufferToBase64Url(crypto.getRandomValues(new Uint8Array(8)).buffer);
   
