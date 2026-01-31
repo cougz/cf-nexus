@@ -60,6 +60,86 @@ Create D1 database:
 wrangler d1 create nexus-db
 ```
 
+Copy the `database_id` from output and update `wrangler.toml`.
+
+Create KV namespace:
+```bash
+wrangler kv:namespace create KV
+```
+
+Copy the `id` from output and update `wrangler.toml`.
+
+Generate JWT signing keys:
+```bash
+npm run keys:generate
+```
+
+Copy the **Private Key** and store as a secret:
+```bash
+wrangler secret put JWT_PRIVATE_KEY
+```
+
+Paste the entire Private Key (including `-----BEGIN` and `-----END` lines).
+
+### 3. Run Database Migrations
+
+Local development:
+```bash
+npm run db:migrate
+```
+
+Production:
+```bash
+npm run db:migrate:prod
+```
+
+### 4. Development & Testing
+
+**Using Bun:**
+
+```bash
+bun install
+bun run dev
+bun run test:unit
+bun run test:e2e
+```
+
+**Or with npm:**
+
+```bash
+npm install
+npm run dev
+npm run test:unit
+npm run typecheck
+```
+
+**Testing Cycle:**
+
+1. Run typecheck: `npm run typecheck`
+2. Run unit tests: `npm run test:unit`
+3. Start dev server: `npm run dev`
+4. Run E2E tests in another terminal: `npm run test:e2e`
+
+**Before committing or pushing to main:**
+
+- Ensure `npm run typecheck` passes without errors
+- Ensure `npm run test:unit` passes
+- Run E2E tests to verify functionality
+- CI/CD will run these checks automatically on pull requests
+
+### 2. Cloudflare Setup
+
+Authenticate with Cloudflare:
+```bash
+npm install -g wrangler
+wrangler login
+```
+
+Create D1 database:
+```bash
+wrangler d1 create nexus-db
+```
+
 Copy the `database_id` from the output and update `wrangler.toml`.
 
 Create KV namespace:

@@ -15,7 +15,7 @@ database_id = ""  # Fill after creation with: wrangler d1 create nexus-db
 # KV Namespace
 [[kv_namespaces]]
 binding = "KV"
-id = ""  # Fill after creation with: wrangler kv:namespace create KV
+id = "nexus-kv-dev"  # Development KV namespace - create with: wrangler kv:namespace create KV
 
 # Durable Objects
 [[durable_objects.bindings]]

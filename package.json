@@ -16,7 +16,9 @@
     "db:migrate": "wrangler d1 execute nexus-db --local --file=migrations/0001_initial_schema.sql",
     "db:migrate:prod": "wrangler d1 execute nexus-db --file=migrations/0001_initial_schema.sql",
     "keys:generate": "node scripts/generate-jwt-keys.js",
-    "deploy": "astro build && wrangler pages deploy dist --project-name=cf-nexus"
+    "bun:dev": "bun run dev",
+    "bun:test": "bun test",
+    "bun:build": "bun run build"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^11.0.0",
