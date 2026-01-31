@@ -10,6 +10,7 @@
     "astro": "astro",
     "test:unit": "vitest",
     "test:e2e": "playwright test",
+    "test:e2e:local": "playwright test",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ext .ts,.tsx,.astro",
     "typecheck": "tsc --noEmit",

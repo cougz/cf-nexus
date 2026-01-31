@@ -11,7 +11,6 @@ export default defineConfig({
     baseURL: 'http://localhost:8788',
     trace: 'on-first-retry',
   },
-
   projects: [
     {
       name: 'chromium',
@@ -26,10 +25,12 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
   ],
-
-  webServer: {
+  // For local testing with dev server, use: npm run test:e2e:local
+  // For CI testing against deployed app, no web server needed
+  webServer: process.env.CI ? undefined : {
     command: 'npm run dev',
     url: 'http://localhost:8788',
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
   },
 });
