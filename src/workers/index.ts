@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
 import type { Env } from '../types';
+import { createWebAuthnHandlers } from './handlers/webauthn';
 
 export const app = new Hono<{ Bindings: Env }>();
 
@@ -19,6 +20,8 @@ app.get('/', (c) => {
 app.get('/health', (c) => {
   return c.json({ status: 'healthy' });
 });
+
+app.route('/webauthn', createWebAuthnHandlers());
 
 export default {
   fetch: app.fetch
