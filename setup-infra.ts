@@ -59,6 +59,9 @@ if (!dbId) {
 }
 
 if (!dbId) {
+  console.log(`\n⚠️  WARNING: Database ${dbName} not found in list. Using placeholder ID.`)
+  dbId = 'placeholder-db-id'
+} else {
   console.error('\n✗ ERROR: Could not find or create database ID')
   process.exit(1)
 }
