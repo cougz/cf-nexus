@@ -16,8 +16,11 @@ id = "0cd3ff89093b4d9182f6e5269bc14497"
 
 [[env.preview.durable_objects.bindings]]
 name = "UserDO"
-class_name = "UserDurableObject"
+class_name = "UserDO"
 script_name = "nexus-api-preview"
+
+[env.preview.vars]
+PUBLIC_API_URL = "https://api.nexus.example.com"
 
 [env.production]
 name = "nexus-api"
@@ -33,8 +36,12 @@ id = "860ceab45edf4b7d86c8523a2e8e070e"
 
 [[env.production.durable_objects.bindings]]
 name = "UserDO"
-class_name = "UserDurableObject"
+class_name = "UserDO"
 script_name = "nexus-api"
 
-[vars]
+[[migrations]]
+tag = "v1"
+new_classes = ["UserDO"]
+
+[env.production.vars]
 PUBLIC_API_URL = "https://api.nexus.example.com"

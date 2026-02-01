@@ -1,5 +1,6 @@
 name = "nexus-web"
 compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
 
 [env.preview]
 name = "nexus-web-preview"
@@ -7,5 +8,5 @@ name = "nexus-web-preview"
 [env.production]
 name = "nexus-web"
 
-[vars]
+[env.production.vars]
 PUBLIC_API_URL = "https://api.nexus.example.com"
