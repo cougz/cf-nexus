@@ -57,6 +57,10 @@ jobs:
         env:
           JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
 
+      - name: Build Web
+        working-directory: apps/web
+        run: bun run build
+
       - name: Deploy Web to Pages
         uses: cloudflare/pages-action@v1
         with:
@@ -95,6 +99,10 @@ jobs:
           workingDirectory: apps/api
         env:
           JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+
+      - name: Build Web
+        working-directory: apps/web
+        run: bun run build
 
       - name: Deploy Web to Pages
         uses: cloudflare/pages-action@v1
