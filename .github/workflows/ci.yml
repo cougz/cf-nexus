@@ -41,22 +41,6 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Setup Cloudflare Infrastructure (preview)
-        run: |
-          echo "CLOUDFLARE_API_TOKEN is set: $([ -n "$CLOUDFLARE_API_TOKEN" ] && echo 'YES (length: ${#CLOUDFLARE_API_TOKEN})' || echo 'NO')"
-          bun run setup-infra preview
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          GITHUB_OUTPUT: ${{ github.output_path }}
-
-      - name: Commit updated wrangler.toml
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/api/wrangler.toml
-          git commit -m "chore: update wrangler.toml with infrastructure IDs" || echo "No changes to commit"
-          git push || echo "Nothing to push"
-
       - name: Apply D1 migrations (preview)
         working-directory: apps/api
         run: bunx wrangler d1 migrations apply nexus-db-preview --remote
@@ -96,24 +80,6 @@ jobs:
 
       - name: Install dependencies
         run: bun install
-
-      - name: Setup Cloudflare Infrastructure (production)
-        run: |
-          echo "CLOUDFLARE_API_TOKEN is set: $([ -n "$CLOUDFLARE_API_TOKEN" ] && echo 'YES (length: ${#CLOUDFLARE_API_TOKEN})' || echo 'NO')"
-          echo "CLOUDFLARE_ACCOUNT_ID is set: $([ -n "$CLOUDFLARE_ACCOUNT_ID" ] && echo 'YES' || echo 'NO')"
-          bun run setup-infra production
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          GITHUB_OUTPUT: ${{ github.output_path }}
-
-      - name: Commit updated wrangler.toml
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add apps/api/wrangler.toml
-          git commit -m "chore: update wrangler.toml with infrastructure IDs" || echo "No changes to commit"
-          git push || echo "Nothing to push"
 
       - name: Apply D1 migrations (production)
         working-directory: apps/api
