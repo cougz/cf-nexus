@@ -1,8 +1,6 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
 import auth from './routes/auth'
-import dbTest from './routes/db-test'
-import debug from './routes/test'
 
 export { UserDO }
 
@@ -69,9 +67,6 @@ app.get('/', c => {
 app.get('/health', c => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
-
-app.route('/debug', debug)
-app.route('/db', dbTest)
 
 app.route('/auth', auth)
 
