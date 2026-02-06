@@ -1,17 +1,94 @@
 ---
-
+import Layout from '../layouts/Layout.astro'
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Home">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+        Nexus
+      </h1>
+      <p class="text-xl text-gray-400">
+        Modern Identity Provider on Cloudflare
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-12">
+      <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-blue-400">🔐 Passwordless Auth</h2>
+        <p class="text-gray-300">
+          WebAuthn (Passkeys) for secure, phishing-resistant authentication without passwords.
+        </p>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-purple-400">🌐 OIDC Provider</h2>
+        <p class="text-gray-300">
+          Full OpenID Connect compliance for single sign-on with modern applications.
+        </p>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-green-400">⚡ Edge Native</h2>
+        <p class="text-gray-300">
+          Built on Cloudflare Workers, D1, KV, and Durable Objects for global low-latency performance.
+        </p>
+      </div>
+
+      <div class="bg-gray-800 rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-yellow-400">🛡️ Secure by Default</h2>
+        <p class="text-gray-300">
+          HttpOnly cookies, CORS protection, CSP headers, and rate limiting included.
+        </p>
+      </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-8 mb-8">
+      <h2 class="text-2xl font-semibold mb-6">Try It Out</h2>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="/login"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition text-center"
+        >
+          Sign In with Passkey
+        </a>
+        <a
+          href="/profile"
+          class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition text-center"
+        >
+          View Profile
+        </a>
+      </div>
+    </div>
+
+    <div class="bg-gray-800/50 rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4 text-gray-300">Project Status</h2>
+      <div class="space-y-2 text-sm">
+        <div class="flex items-center">
+          <span class="text-green-400 mr-2">✅</span>
+          <span class="text-gray-300">Infrastructure & CI/CD (Milestone 1)</span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-green-400 mr-2">✅</span>
+          <span class="text-gray-300">Backend Core Services (Milestone 2)</span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-green-400 mr-2">✅</span>
+          <span class="text-gray-300">Authentication API (Milestone 3)</span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-green-400 mr-2">✅</span>
+          <span class="text-gray-300">Astro Frontend (Milestone 5) - Basic</span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-yellow-400 mr-2">⏳</span>
+          <span class="text-gray-400">OIDC Endpoints (Milestone 4)</span>
+        </div>
+        <div class="flex items-center">
+          <span class="text-yellow-400 mr-2">⏳</span>
+          <span class="text-gray-400">Production Hardening (Milestone 6)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

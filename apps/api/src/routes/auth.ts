@@ -251,9 +251,11 @@ auth.post('/login/verify', async c => {
   const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
 
   let user: { id: string; username: string; createdAt: string } | null = null
+  let sessionId: string | undefined
 
   try {
     const session = await userDO.createSession(86400000)
+    sessionId = session.id
     user = await userDO.getUser(session.userId)
   } catch {
     await challengeService.deleteChallenge(body.challenge)
@@ -264,6 +266,17 @@ auth.post('/login/verify', async c => {
   }
 
   await challengeService.deleteChallenge(body.challenge)
+
+  // Set HttpOnly, Secure, SameSite=Strict session cookie
+  if (sessionId) {
+    c.cookie('session', sessionId, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict',
+      path: '/',
+      maxAge: 86400, // 24 hours
+    })
+  }
 
   return c.json({ user })
 })

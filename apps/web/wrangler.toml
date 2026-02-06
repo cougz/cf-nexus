@@ -9,4 +9,4 @@ name = "nexus-web-preview"
 name = "nexus-web"
 
 [env.production.vars]
-PUBLIC_API_URL = "https://api.nexus.example.com"
+PUBLIC_API_URL = "https://nexus-api.tim-9c0.workers.dev"

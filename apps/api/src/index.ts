@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
 import auth from './routes/auth'
+import simpleAuth from './routes/simple-auth'
 
 export { UserDO }
 

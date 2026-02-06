@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout title="Profile">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">Profile Dashboard</h1>
+
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Welcome to Nexus</h2>
+      <p class="text-gray-400">
+        You're successfully logged in using WebAuthn. Your session is secure with
+        an HttpOnly, Secure, SameSite=Strict cookie.
+      </p>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">Session Information</h2>
+      <div class="space-y-2 text-gray-300">
+        <div class="flex justify-between">
+          <span>Status:</span>
+          <span class="text-green-400">Active</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Auth Method:</span>
+          <span>WebAuthn (Passkey)</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Cookie Security:</span>
+          <span class="text-green-400">HttpOnly, Secure, SameSite=Strict</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-gray-800 rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4">Next Steps</h2>
+      <ul class="space-y-2 text-gray-300">
+        <li class="flex items-center">
+          <span class="text-yellow-400 mr-2">⏳</span>
+          OIDC Discovery & JWKS endpoints (Milestone 4)
+        </li>
+        <li class="flex items-center">
+          <span class="text-yellow-400 mr-2">⏳</span>
+          Authorization and Token endpoints (Milestone 4)
+        </li>
+        <li class="flex items-center">
+          <span class="text-yellow-400 mr-2">⏳</span>
+          Consent page for OAuth/OIDC clients (Milestone 5)
+        </li>
+        <li class="flex items-center">
+          <span class="text-yellow-400 mr-2">⏳</span>
+          Security headers and rate limiting (Milestone 6)
+        </li>
+      </ul>
+    </div>
+
+    <div class="mt-6 flex space-x-4">
+      <button
+        onclick="window.location.href = '/login'"
+        class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition"
+      >
+        Back to Login
+      </button>
+    </div>
+  </div>
+</Layout>
