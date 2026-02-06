@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
 import auth from './routes/auth'
+import dbTest from './routes/db-test'
 import debug from './routes/test'
 
 export { UserDO }
@@ -70,6 +71,7 @@ app.get('/health', c => {
 })
 
 app.route('/debug', debug)
+app.route('/db', dbTest)
 
 app.route('/auth', auth)
 
