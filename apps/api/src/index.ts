@@ -68,6 +68,8 @@ app.get('/health', c => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
+app.route('/simple', simpleAuth)
+
 app.route('/auth', auth)
 
 export default app
