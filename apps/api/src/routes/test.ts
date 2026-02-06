@@ -1,8 +1,8 @@
 import { Hono } from 'hono'
 
-const test = new Hono<{ Bindings: { KV: KVNamespace } }>()
+const debug = new Hono<{ Bindings: { KV: KVNamespace } }>()
 
-test.get('/test-kv', async c => {
+debug.get('/kv', async c => {
   const testData = {
     key: 'test-key',
     value: 'test-value',
@@ -24,4 +24,4 @@ test.get('/test-kv', async c => {
   })
 })
 
-export default test
+export default debug
