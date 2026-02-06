@@ -1,6 +1,6 @@
 import type { UserSchema } from '@nexus/shared'
 import { Hono } from 'hono'
-import { UserDO } from '../durable-objects/UserDO'
+import type { UserDO } from '../durable-objects/UserDO'
 import { ChallengeService } from '../services/ChallengeService'
 import { DatabaseService } from '../services/DatabaseService'
 import {
@@ -103,22 +103,12 @@ auth.post('/register/verify', async c => {
   }
 
   const userDOId = c.env.UserDO.idFromName(challengeData.username)
-  const userDO = c.env.UserDO.get(userDOId)
-  const stub = userDO as unknown as { fetch: (req: Request) => Promise<Response> }
+  const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
 
   let user: { id: string; username: string; createdAt: string } | null = null
 
   try {
-    const response = await stub.fetch(
-      new Request('http://internal/createUser', {
-        method: 'POST',
-        body: JSON.stringify({ username: challengeData.username }),
-      })
-    )
-    const result = (await response.json()) as {
-      user: { id: string; username: string; createdAt: string }
-    }
-    user = result.user
+    user = await userDO.createUser({ username: challengeData.username })
   } catch {
     await challengeService.deleteChallenge(body.challenge)
     return c.json(
@@ -172,22 +162,12 @@ auth.post('/login/options', async c => {
   }
 
   const userDOId = c.env.UserDO.idFromName(username)
-  const userDO = c.env.UserDO.get(userDOId)
-  const stub = userDO as unknown as { fetch: (req: Request) => Promise<Response> }
+  const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
 
   let user: { id: string; username: string; createdAt: string } | null = null
 
   try {
-    const response = await stub.fetch(
-      new Request('http://internal/getByUsername', {
-        method: 'POST',
-        body: JSON.stringify({ username }),
-      })
-    )
-    const result = (await response.json()) as {
-      user: { id: string; username: string; createdAt: string } | null
-    }
-    user = result.user
+    user = await userDO.getUserByUsername(username)
   } catch {
     return c.json(
       { error: { message: 'Invalid request', code: 'INVALID_REQUEST' } },
@@ -268,22 +248,13 @@ auth.post('/login/verify', async c => {
   }
 
   const userDOId = c.env.UserDO.idFromName(challengeData.username)
-  const userDO = c.env.UserDO.get(userDOId)
-  const stub = userDO as unknown as { fetch: (req: Request) => Promise<Response> }
+  const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
 
   let user: { id: string; username: string; createdAt: string } | null = null
 
   try {
-    const response = await stub.fetch(
-      new Request('http://internal/createSession', {
-        method: 'POST',
-        body: JSON.stringify({ ttlMs: 86400000 }),
-      })
-    )
-    const result = (await response.json()) as {
-      user: { id: string; username: string; createdAt: string }
-    }
-    user = result.user
+    const session = await userDO.createSession(86400000)
+    user = await userDO.getUser(session.userId)
   } catch {
     await challengeService.deleteChallenge(body.challenge)
     return c.json(
