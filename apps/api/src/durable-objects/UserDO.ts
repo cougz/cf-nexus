@@ -18,6 +18,7 @@ export interface DurableObjectState {
     list?(): Promise<{ keys: string[] }>
   }
   id?: string
+  waitUntil(promise: Promise<unknown>): void
 }
 
 export interface Env {
@@ -128,5 +129,37 @@ export class UserDO implements DurableObject {
     }
 
     return sessions
+  }
+
+  async fetch(request: Request): Promise<Response> {
+    const url = new URL(request.url)
+    const path = url.pathname
+
+    if (path === '/internal/createUser') {
+      const body = (await request.json()) as { username: string }
+      const user = await this.createUser(body)
+      return new Response(JSON.stringify({ user }), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (path === '/internal/getByUsername') {
+      const body = (await request.json()) as { username: string }
+      const user = await this.getUserByUsername(body.username)
+      return new Response(JSON.stringify({ user }), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (path === '/internal/createSession') {
+      const body = (await request.json()) as { ttlMs?: number }
+      const session = await this.createSession(body.ttlMs)
+      const user = await this.getUser(session.userId)
+      return new Response(JSON.stringify({ user, session }), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    return new Response('Not Found', { status: 404 })
   }
 }

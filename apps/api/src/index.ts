@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
+import auth from './routes/auth'
 
 export { UserDO }
 
@@ -20,7 +21,7 @@ app.use('*', async (c, next) => {
   c.header('X-Response-Time', `${duration}ms`)
 })
 
-app.use('*', (c, next) => {
+app.use('*', async (c, next) => {
   const origin = c.req.header('Origin')
   if (origin) {
     c.header('Access-Control-Allow-Origin', origin)
@@ -29,7 +30,7 @@ app.use('*', (c, next) => {
     c.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   }
   if (c.req.method === 'OPTIONS') {
-    return c.text('', { status: 204 })
+    return c.newResponse(null, { status: 204 })
   }
   return next()
 })
@@ -55,7 +56,7 @@ app.notFound(c => {
         code: 'NOT_FOUND',
       },
     },
-    { status: 404 }
+    404
   )
 })
 
@@ -66,5 +67,7 @@ app.get('/', c => {
 app.get('/health', c => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
+
+app.route('/auth', auth)
 
 export default app

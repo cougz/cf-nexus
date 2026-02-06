@@ -8,7 +8,7 @@ export interface KeyPair {
 }
 
 export async function generateKeyPair(): Promise<KeyPair> {
-  const keyPair = await crypto.subtle.generateKey(
+  const keyPair = (await crypto.subtle.generateKey(
     {
       name: 'RSASSA-PKCS1-v1_5',
       modulusLength: 2048,
@@ -17,10 +17,13 @@ export async function generateKeyPair(): Promise<KeyPair> {
     },
     true,
     ['sign', 'verify']
-  )
+  )) as CryptoKeyPair
 
-  const privateKeyExport = await crypto.subtle.exportKey('pkcs8', keyPair.privateKey)
-  const publicKeyExport = await crypto.subtle.exportKey('spki', keyPair.publicKey)
+  const privateKeyExport = (await crypto.subtle.exportKey(
+    'pkcs8',
+    keyPair.privateKey
+  )) as ArrayBuffer
+  const publicKeyExport = (await crypto.subtle.exportKey('spki', keyPair.publicKey)) as ArrayBuffer
 
   const privateKey = formatPEM(privateKeyExport, 'PRIVATE KEY')
   const publicKey = formatPEM(publicKeyExport, 'PUBLIC KEY')
