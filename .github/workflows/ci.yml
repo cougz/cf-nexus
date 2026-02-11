@@ -61,6 +61,10 @@ jobs:
         working-directory: apps/web
         run: bun run build
 
+      - name: Fix _routes.json for Pages routing
+        working-directory: apps/web
+        run: node fix-routes.mjs
+
       - name: Deploy Web to Pages
         working-directory: apps/web
         run: bunx wrangler pages deploy dist --project-name=nexus-web-preview
@@ -102,6 +106,10 @@ jobs:
       - name: Build Web
         working-directory: apps/web
         run: bun run build
+
+      - name: Fix _routes.json for Pages routing
+        working-directory: apps/web
+        run: node fix-routes.mjs
 
       - name: Deploy Web to Pages
         working-directory: apps/web
