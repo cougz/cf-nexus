@@ -241,27 +241,27 @@ if (options.action === 'register') {
 
 ## Files to Modify
 
-1. **apps/api/src/services/WebAuthnService.ts** - Replace mock verification
-2. **apps/api/src/routes/auth.ts** - Add admin logic, user detection
-3. **apps/api/migrations/0005_add_admin_flag.sql** - New migration
-4. **apps/web/src/pages/login.astro** - Handle register vs authenticate flows
-5. **apps/api/package.json** - Add @passwordless-id/webauthn dependency
+1. **apps/api/src/services/WebAuthnService.ts** - Replace mock verification ✅
+2. **apps/api/src/routes/auth.ts** - Add admin logic, user detection ✅
+3. **apps/api/src/durable-objects/UserDO.ts** - Add isAdmin flag ✅
+4. **apps/api/src/services/DatabaseService.ts** - Add getAllUserIds method ✅
+5. **apps/web/src/pages/login.astro** - Handle register vs authenticate flows ✅
+6. **apps/api/package.json** - @passwordless-id/webauthn dependency already installed ✅
 
 ## Dependencies
 
-- `@passwordless-id/webauthn`: For verifying WebAuthn attestation/assertion
-- D1 migration to add `is_admin` column
-- Update `users` table (or create if missing)
+- `@passwordless-id/webauthn`: For verifying WebAuthn attestation/assertion ✅
+- UserDO isAdmin flag (no migration needed - users stored in Durable Objects) ✅
 
 ## Success Criteria
 
-- [ ] First user becomes admin automatically
-- [ ] WebAuthn attestation is actually verified (not mocked)
-- [ ] WebAuthn assertion is actually verified (not mocked)
-- [ ] Login flow handles both new and existing users
-- [ ] Registration is protected after admin exists
-- [ ] All tests pass with real WebAuthn verification
-- [ ] No mock code remains in production
+- [x] First user becomes admin automatically
+- [x] WebAuthn attestation is actually verified (not mocked)
+- [x] WebAuthn assertion is actually verified (not mocked)
+- [x] Login flow handles both new and existing users
+- [x] Registration is protected after admin exists
+- [x] All tests pass with real WebAuthn verification
+- [x] No mock code remains in production
 
 ## Estimated Time
 
