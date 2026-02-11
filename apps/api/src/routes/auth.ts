@@ -170,11 +170,8 @@ auth.post('/login/options', async c => {
 
   try {
     user = await userDO.getUserByUsername(username)
-  } catch {
-    return c.json(
-      { error: { message: 'Invalid request', code: 'INVALID_REQUEST' } },
-      { status: 400 }
-    )
+  } catch (error) {
+    console.error('Error checking for existing user:', error)
   }
 
   if (!user) {
