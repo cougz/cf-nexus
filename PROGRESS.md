@@ -310,6 +310,10 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - ✅ Deploy Frontend (CI successful)
 
 **Milestone 6:** ⚠️ **IN PROGRESS**
+- ✅ Security Headers (CSP, X-Frame-Options, etc.)
+- ✅ Rate limiting with KV (/authorize, /token, /auth/*)
+- 🔄 Production CI Job (tag-triggered deployment)
+- ⏳ End-to-End Smoke Test (Playwright)
 
 ---
 
