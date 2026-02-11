@@ -35,6 +35,18 @@
       }
     }
   },
+  "overrides": [
+    {
+      "include": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    }
+  ],
   "javascript": {
     "formatter": {
       "jsxQuoteStyle": "double",
