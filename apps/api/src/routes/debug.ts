@@ -47,4 +47,11 @@ debug.get('/test-kv', async c => {
   }
 })
 
+debug.get('/get-challenge/:challenge', async c => {
+  const challenge = c.req.param('challenge')
+  const challengeService = new ChallengeService(c.env.KV)
+  const challengeData = await challengeService.getChallenge(challenge || '')
+  return c.json({ challenge, challengeData })
+})
+
 export default debug
