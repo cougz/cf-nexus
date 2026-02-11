@@ -286,18 +286,20 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 **Milestone 4:** ⚠️ **IN PROGRESS**
 - ✅ OIDC Discovery endpoint (/.well-known/openid-configuration) - DEPLOYED & WORKING
 - ✅ JWKS endpoint (/.well-known/jwks.json) - DEPLOYED & WORKING
-- ⚠️ Authorization endpoint (/authorize) - IMPLEMENTED, ROUTING ISSUE (investigating)
-- ⚠️ Token endpoint (/token) - IMPLEMENTED, ROUTING ISSUE (investigating)
-- ⚠️ UserInfo endpoint (/userinfo) - IMPLEMENTED, ROUTING ISSUE (investigating)
+- ✅ Authorization endpoint (/authorize) - DEPLOYED & WORKING (returns proper OIDC errors)
+- ✅ Token endpoint (/token) - DEPLOYED & WORKING (returns proper OIDC errors)
+- ✅ UserInfo endpoint (/userinfo) - DEPLOYED & WORKING (returns proper OIDC errors)
 
 **Deployed URLs:**
 - API: https://nexus-api.tim-9c0.workers.dev
 - Web: https://nexus-web-7l6.pages.dev
 
-**Current Blocker:**
-New OIDC routes (authorize, token, userinfo) are implemented and registered in the worker, but returning 404. Test route `/test-routes` confirms routes are registered. Investigation needed to resolve routing conflict or deployment issue.
+**Routing Issue RESOLVED:**
+- Fixed TypeScript compilation errors in OIDC endpoints
+- Fixed Durable Object UserDO export (removed type-only export)
+- All OIDC endpoints now reachable and returning proper responses
 
-**Next Priority:** Resolve routing issue with new OIDC endpoints
+**Next Priority:** Complete OIDC integration testing with real client
 
 ---
 
