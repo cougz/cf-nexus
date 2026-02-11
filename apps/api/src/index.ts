@@ -77,32 +77,25 @@ app.get('/health', c => {
 app.get('/test-routes', c => {
   return c.json({
     message: 'Routes are working',
-    routes: [
-      '/',
-      '/health',
-      '/.well-known/openid-configuration',
-      '/.well-known/jwks.json',
-      '/authorize',
-      '/token',
-      '/userinfo',
-    ],
+    routes: ['/', '/health', '/test-new', '/.well-known/openid-configuration', '/.well-known/jwks.json', '/authorize', '/token', '/userinfo']
   })
+})
 })
 
 app.get('/.well-known', oidc)
+app.get('/test-new', c => {
+  return c.json({ message: 'New test endpoint works!', timestamp: new Date().toISOString() })
+})
 app.route('/authorize', authorize)
 app.route('/debug', debug)
 app.route('/simple', simpleAuth)
 app.route('/auth', auth)
 app.route('/token', token)
 app.route('/userinfo', userinfo)
-
-app.route('/simple', simpleAuth)
-
-app.route('/auth', auth)
-app.route('/authorize', authorize)
-app.route('/debug', debug)
-app.route('/token', token)
-app.route('/userinfo', userinfo)
-
+app.get('/test-routes', c => {
+  return c.json({
+    message: 'Routes are working',
+    routes: ['/', '/health', '/test-new', '/.well-known/openid-configuration', '/.well-known/jwks.json', '/authorize', '/token', '/userinfo']
+  })
+})
 export default app
