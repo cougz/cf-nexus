@@ -283,11 +283,21 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - Session management with HttpOnly, Secure, SameSite=Strict cookies
 - Unit tests passing for all services
 
+**Milestone 4:** ⚠️ **IN PROGRESS**
+- ✅ OIDC Discovery endpoint (/.well-known/openid-configuration) - DEPLOYED & WORKING
+- ✅ JWKS endpoint (/.well-known/jwks.json) - DEPLOYED & WORKING
+- ⚠️ Authorization endpoint (/authorize) - IMPLEMENTED, ROUTING ISSUE (investigating)
+- ⚠️ Token endpoint (/token) - IMPLEMENTED, ROUTING ISSUE (investigating)
+- ⚠️ UserInfo endpoint (/userinfo) - IMPLEMENTED, ROUTING ISSUE (investigating)
+
 **Deployed URLs:**
 - API: https://nexus-api.tim-9c0.workers.dev
 - Web: https://nexus-web-7l6.pages.dev
 
-**Next Priority:** Begin Milestone 4 - OIDC Compliance (Discovery, JWKS, Authorization, Token endpoints)
+**Current Blocker:**
+New OIDC routes (authorize, token, userinfo) are implemented and registered in the worker, but returning 404. Test route `/test-routes` confirms routes are registered. Investigation needed to resolve routing conflict or deployment issue.
+
+**Next Priority:** Resolve routing issue with new OIDC endpoints
 
 ---
 
