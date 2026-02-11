@@ -39,8 +39,8 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
     <div id="success" class="mt-4 p-4 bg-green-900/50 border border-green-700 rounded-lg text-green-300 hidden"></div>
   </div>
 
-  <script>
-    const API_URL = '{{ apiUrl }}'
+  <script define:vars={{ apiUrl }}>
+    const API_URL = apiUrl
 
     document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
       e.preventDefault()
