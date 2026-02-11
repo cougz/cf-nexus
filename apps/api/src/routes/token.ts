@@ -22,6 +22,9 @@ interface AuthCode {
 const token = new Hono<Env>()
 
 token.post('/token', async c => {
+  console.log('[DEBUG] /token endpoint called')
+  console.log('[DEBUG] Request body:', await c.req.json())
+
   const { grant_type, code, redirect_uri, client_id, code_verifier } = await c.req.json()
 
   if (grant_type !== 'authorization_code') {

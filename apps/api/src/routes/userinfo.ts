@@ -11,6 +11,9 @@ type Env = {
 const userinfo = new Hono<Env>()
 
 userinfo.get('/userinfo', async c => {
+  console.log('[DEBUG] /userinfo endpoint called')
+  console.log('[DEBUG] Authorization header:', c.req.header('Authorization'))
+
   const authHeader = c.req.header('Authorization')
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

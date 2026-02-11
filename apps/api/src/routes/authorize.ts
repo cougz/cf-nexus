@@ -22,6 +22,9 @@ interface AuthCode {
 const authorize = new Hono<Env>()
 
 authorize.get('/authorize', async c => {
+  console.log('[DEBUG] /authorize endpoint called')
+  console.log('[DEBUG] Query params:', c.req.query())
+
   const { response_type, client_id, redirect_uri, scope, state } = c.req.query()
 
   if (!response_type || response_type !== 'code') {
