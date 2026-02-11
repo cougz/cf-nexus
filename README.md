@@ -1,6 +1,20 @@
 # Nexus OIDC Provider
 
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cougz/cf-nexus)
+[![Tests](https://img.shields.io/github/actions/workflow/status/cougz/cf-nexus/CI%2FCD?label=tests)](https://github.com/cougz/cf-nexus/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A Cloudflare-based OIDC authentication provider with WebAuthn (passkey) support.
+
+> **Quick Deploy:** Click the **Deploy to Cloudflare** button above to automatically deploy to your Cloudflare account. Cloudflare will:
+> - Fork this repository to your GitHub account
+> - Create and configure required resources (D1, KV)
+> - Build and deploy the Workers application
+> - Handle resource bindings automatically
+>
+> After deployment, follow the [Admin User Setup](#admin-user-setup) section to create your first admin account.
+>
+> **Note:** This project is currently deployed at: https://nexus-api.tim-9c0.workers.dev
 
 ## Features
 
@@ -63,6 +77,20 @@ Expected output: All tests passing
 ```bash
 bun run lint
 ```
+
+## Deployment Options
+
+### Option A: Fork and Deploy (Easiest)
+
+1. Click the **"Deploy to Cloudflare Workers"** button above
+2. This will fork the repository to your GitHub account
+3. Follow the [Cloudflare Infrastructure Setup](#cloudflare-infrastructure-setup) section below
+4. Configure GitHub Secrets and push to trigger CI/CD
+5. Your Nexus OIDC provider will be deployed automatically
+
+### Option B: Manual Clone
+
+Follow the full setup instructions in the [Cloudflare Infrastructure Setup](#cloudflare-infrastructure-setup) section.
 
 ## Cloudflare Infrastructure Setup
 
@@ -175,10 +203,37 @@ cat private.pem
 
 ## Deployment
 
-### Automatic Deployment (Recommended)
+### Option 1: Deploy to Cloudflare Button (Recommended)
 
-After setting up infrastructure and GitHub secrets, CI/CD will automatically:
+Click the **Deploy to Cloudflare** button at the top of this README. Cloudflare will:
 
+1. **Fork** the repository to your GitHub account
+2. **Clone** into your Cloudflare account
+3. **Build** the application
+4. **Provision** resources automatically (D1 databases, KV namespaces)
+5. **Deploy** to the Cloudflare network
+
+During deployment, you'll be able to:
+- Customize project name
+- Set resource names
+- Configure environment variables
+- Review and modify build commands
+
+After deployment completes:
+- Your Worker URL will be displayed
+- You can access the Workers dashboard
+- All resources are automatically bound
+
+### Option 2: Manual Setup and CI/CD
+
+If you prefer manual control or want to contribute to the original repository:
+
+1. **Fork** this repository on GitHub
+2. **Follow** the [Cloudflare Infrastructure Setup](#cloudflare-infrastructure-setup) section
+3. **Configure** GitHub Secrets (see [GitHub Secrets Setup](#github-secrets-setup))
+4. **Push** to trigger CI/CD deployment
+
+CI/CD will automatically:
 1. Run tests on every push
 2. Deploy to preview environment on PRs
 3. Deploy to production on `main` branch pushes
@@ -188,9 +243,11 @@ Monitor deployments:
 gh run watch
 ```
 
-### Manual Deployment
+### Option 3: Manual Wrangler Deployment
 
-Deploy API to Cloudflare Workers:
+For full control or troubleshooting:
+
+**Deploy API to Cloudflare Workers:**
 ```bash
 cd apps/api
 
@@ -201,12 +258,18 @@ bunx wrangler deploy --env preview
 bunx wrangler deploy --env production
 ```
 
-Deploy Web to Cloudflare Pages:
+**Deploy Web to Cloudflare Pages:**
 ```bash
 cd apps/web
 bun run build
 node fix-routes.mjs
 bunx wrangler pages deploy dist --project-name=nexus-web
+```
+
+**Apply D1 migrations manually:**
+```bash
+cd apps/api
+bunx wrangler d1 migrations apply DB --remote --env production
 ```
 
 ## Local Development
@@ -251,6 +314,15 @@ cf-nexus/
 │   └── workflows/    # CI/CD pipelines
 └── *.md             # Documentation
 ```
+
+**Note:** This is a monorepo containing both:
+- `apps/api` - The OIDC provider (deployed via Deploy button or Workers)
+- `apps/web` - The frontend UI (deployed separately to Cloudflare Pages)
+
+The **Deploy to Cloudflare** button only deploys the Worker (`apps/api`). To deploy the web frontend:
+1. Deploy the API using the button
+2. Set up `apps/web` manually using the [Manual Deployment](#manual-deployment) instructions below
+3. Update `PUBLIC_API_URL` in the web app to point to your deployed Worker URL
 
 ## API Endpoints
 
