@@ -9,7 +9,7 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
     <h1 class="text-3xl font-bold mb-6">Welcome to Nexus</h1>
     <p class="text-gray-400 mb-8">Sign in using WebAuthn (passkey)</p>
 
-    <form id="loginForm" class="space-y-4">
+  <form id="loginForm" class="space-y-4" onsubmit="return false;">
       <div>
         <label for="username" class="block text-sm font-medium text-gray-300 mb-2">
           Username
@@ -35,18 +35,40 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
       </button>
     </form>
 
-    <div id="error" class="mt-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-300 hidden"></div>
+  <div id="error" class="mt-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-300 hidden"></div>
 
     <div id="success" class="mt-4 p-4 bg-green-900/50 border border-green-700 rounded-lg text-green-300 hidden"></div>
+
+    <div id="js-error" class="mt-4 p-4 bg-yellow-900/50 border border-yellow-700 rounded-lg text-yellow-300 hidden">
+      JavaScript failed to load. Please check console for errors.
+    </div>
   </div>
 
   <script define:vars={{ apiUrl }}>
     const API_URL = apiUrl
 
+    window.addEventListener('DOMContentLoaded', () => {
+      const jsErrorDiv = document.getElementById('js-error')
+      if (jsErrorDiv) {
+        jsErrorDiv.classList.add('hidden')
+      }
+    })
+
     const signinButton = document.getElementById('signinButton')!
 
-    signinButton?.addEventListener('click', async (e) => {
+    if (!signinButton) {
+      console.error('signinButton not found')
+      const jsErrorDiv = document.getElementById('js-error')
+      if (jsErrorDiv) {
+        jsErrorDiv.textContent = 'Error: signinButton element not found. Please refresh the page.'
+        jsErrorDiv.classList.remove('hidden')
+      }
+    } else {
+      signinButton?.addEventListener('click', async (e) => {
       e.preventDefault()
+      e.stopPropagation()
+      e.stopImmediatePropagation()
+
       const usernameInput = document.getElementById('username') as HTMLInputElement
       const username = usernameInput?.value?.trim()
 
@@ -196,9 +218,12 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
         }
       } catch (err: any) {
         console.error('Error during authentication:', err)
+        const errorDiv = document.getElementById('error')!
         errorDiv.textContent = err.message || 'Authentication failed'
         errorDiv.classList.remove('hidden')
       }
+
+      return false
     })
   </script>
 </Layout>
