@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import type { UserDO } from './durable-objects/UserDO'
+import { UserDO } from './durable-objects/UserDO'
 import auth from './routes/auth'
 import authorize from './routes/authorize'
 import debug from './routes/debug'
@@ -470,5 +470,5 @@ app.route('/auth', auth)
 app.route('/simple', simpleAuth)
 app.route('/debug', debug)
 
-export type { UserDO }
+export { UserDO }
 export default app
