@@ -110,8 +110,9 @@ app.get('/.well-known/openid-configuration', async c => {
 })
 
 app.get('/.well-known/jwks.json', async c => {
-  const { getJWKS } = await import('./services/KeyService')
+  const { getJWKS, generateKeyPair } = await import('./services/KeyService')
   const cacheKey = 'oidc:jwks'
+  const keyCacheKey = 'oidc:private_key'
 
   try {
     const cached = await c.env.KV.get(cacheKey)
@@ -124,7 +125,15 @@ app.get('/.well-known/jwks.json', async c => {
     }
   } catch {}
 
-  const jwks = await getJWKS(process.env.JWT_PRIVATE_KEY || '')
+  let privateKey = await c.env.KV.get(keyCacheKey)
+
+  if (!privateKey) {
+    const keyPair = await generateKeyPair()
+    privateKey = keyPair.privateKey
+    await c.env.KV.put(keyCacheKey, privateKey)
+  }
+
+  const jwks = await getJWKS(privateKey)
 
   c.env.KV.put(cacheKey, JSON.stringify(jwks), { expirationTtl: 3600 })
 
