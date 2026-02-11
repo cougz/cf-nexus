@@ -27,7 +27,8 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
       </div>
 
       <button
-        type="submit"
+        type="button"
+        id="signinButton"
         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900"
       >
         Sign In with Passkey
@@ -42,17 +43,24 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
   <script define:vars={{ apiUrl }}>
     const API_URL = apiUrl
 
-    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+    const signinButton = document.getElementById('signinButton')!
+
+    signinButton?.addEventListener('click', async (e) => {
       e.preventDefault()
-      const form = e.target as HTMLFormElement
-      const formData = new FormData(form)
-      const username = formData.get('username') as string
+      const usernameInput = document.getElementById('username') as HTMLInputElement
+      const username = usernameInput?.value?.trim()
 
       const errorDiv = document.getElementById('error')!
       const successDiv = document.getElementById('success')!
 
       errorDiv.classList.add('hidden')
       successDiv.classList.add('hidden')
+
+      if (!username || username.length < 3 || username.length > 50) {
+        errorDiv.textContent = 'Please enter a valid username (3-50 characters)'
+        errorDiv.classList.remove('hidden')
+        return
+      }
 
       console.log('Starting login process for:', username)
 
