@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
 import auth from './routes/auth'
+import authorize from './routes/authorize'
 import debug from './routes/debug'
 import simpleAuth from './routes/simple-auth'
 
@@ -147,6 +148,7 @@ app.get('/.well-known/jwks.json', async c => {
 app.route('/simple', simpleAuth)
 
 app.route('/auth', auth)
+app.route('/authorize', authorize)
 app.route('/debug', debug)
 app.route('/simple', simpleAuth)
 
