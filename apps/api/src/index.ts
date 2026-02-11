@@ -470,4 +470,5 @@ app.route('/auth', auth)
 app.route('/simple', simpleAuth)
 app.route('/debug', debug)
 
+export type { UserDO }
 export default app
