@@ -1,10 +1,9 @@
 import { Hono } from 'hono'
-import { getJWKS } from '../services/KeyService'
+import { generateKeyPair, getJWKS } from '../services/KeyService'
 
 type Env = {
   Bindings: {
     KV: KVNamespace
-    DB: D1Database
   }
 }
 
@@ -52,6 +51,7 @@ oidc.get('/.well-known/openid-configuration', async c => {
 
 oidc.get('/.well-known/jwks.json', async c => {
   const cacheKey = 'oidc:jwks'
+  const keyCacheKey = 'oidc:private_key'
 
   try {
     const cached = await c.env.KV.get(cacheKey)
@@ -64,7 +64,17 @@ oidc.get('/.well-known/jwks.json', async c => {
     }
   } catch {}
 
-  const jwks = await getJWKS(process.env.JWT_PRIVATE_KEY || '')
+  let privateKey = await c.env.KV.get(keyCacheKey)
+
+  if (!privateKey) {
+    const keyPair = await generateKeyPair()
+    privateKey = keyPair.privateKey
+    const publicKey = keyPair.publicKey
+    await c.env.KV.put(keyCacheKey, privateKey)
+    await c.env.KV.put('oidc:public_key', publicKey)
+  }
+
+  const jwks = await getJWKS(privateKey)
 
   c.env.KV.put(cacheKey, JSON.stringify(jwks), { expirationTtl: 3600 })
 
