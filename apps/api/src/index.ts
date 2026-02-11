@@ -73,6 +73,21 @@ app.get('/health', c => {
   return c.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
+app.get('/test-routes', c => {
+  return c.json({
+    message: 'Routes are working',
+    routes: [
+      '/',
+      '/health',
+      '/.well-known/openid-configuration',
+      '/.well-known/jwks.json',
+      '/authorize',
+      '/token',
+      '/userinfo',
+    ],
+  })
+})
+
 app.get('/.well-known/openid-configuration', async c => {
   const cacheKey = 'oidc:configuration'
   const ISSUER = 'https://nexus-api.tim-9c0.workers.dev'
