@@ -62,13 +62,14 @@ jobs:
         run: bun run build
 
       - name: Deploy Web to Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/pages-action@v2
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: nexus-web-preview
           directory: apps/web/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: 3
 
   deploy-prod:
     name: Deploy Production
@@ -106,10 +107,11 @@ jobs:
         run: bun run build
 
       - name: Deploy Web to Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/pages-action@v2
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: nexus-web
           directory: apps/web/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: 3
