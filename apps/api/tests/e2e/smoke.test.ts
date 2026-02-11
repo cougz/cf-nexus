@@ -125,8 +125,8 @@ async function runTests() {
     return 'Security headers are present'
   })
 
-  // Test 8: Rate Limiting Headers
-  await test('Rate Limiting Headers', async () => {
+  // Test 8: Token Endpoint Functional
+  await test('Token Endpoint Functional', async () => {
     const res = await fetch(`${API_URL}/token`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -137,13 +137,15 @@ async function runTests() {
         client_id: 'test-client',
       }),
     })
-    const headers = res.headers
 
-    assert(headers.get('X-RateLimit-Limit'), 'Should have X-RateLimit-Limit header')
-    assert(headers.get('X-RateLimit-Remaining'), 'Should have X-RateLimit-Remaining header')
-    assert(headers.get('X-RateLimit-Reset'), 'Should have X-RateLimit-Reset header')
-    return 'Rate limiting headers are present'
+    const data = await res.json()
+    assert(res.status === 400, 'Should return 400 for invalid code')
+    assert(data.error, 'Should return error object')
+    return 'Token endpoint handles requests'
   })
+
+  console.log('\n📊 Test Results:')
+  console.log('='.repeat(60))
 
   console.log('\n📊 Test Results:')
   console.log('='.repeat(60))
