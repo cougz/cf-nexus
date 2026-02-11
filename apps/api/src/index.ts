@@ -427,12 +427,13 @@ app.get('/userinfo', async c => {
 
   const token = authHeader.substring(7)
 
-  const publicKey = await c.env.KV.get('oidc:public_key')
+  let publicKey = await c.env.KV.get('oidc:public_key')
   if (!publicKey) {
-    return c.json(
-      { error: 'server_error', error_description: 'Public key not available' },
-      { status: 500 }
-    )
+    const keyPair = await generateKeyPair()
+    const privateKey = keyPair.privateKey
+    publicKey = keyPair.publicKey
+    await c.env.KV.put('oidc:private_key', privateKey)
+    await c.env.KV.put('oidc:public_key', publicKey)
   }
 
   let payload: Record<string, unknown>
