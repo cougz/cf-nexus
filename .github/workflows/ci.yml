@@ -69,8 +69,6 @@ jobs:
           projectName: nexus-web-preview
           directory: apps/web/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: 3
-          deploymentCompatibilityDate: 2024-01-01
 
   deploy-prod:
     name: Deploy Production
@@ -115,5 +113,3 @@ jobs:
           projectName: nexus-web
           directory: apps/web/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          wranglerVersion: 3
-          deploymentCompatibilityDate: 2024-01-01
