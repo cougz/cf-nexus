@@ -151,11 +151,11 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 
 ### Milestone 4: OIDC Compliance
 
-#### Task 4.1: Discovery & JWKS
-- [ ] Implement `/.well-known/openid-configuration`
-- [ ] Cache configuration in KV
-- [ ] Implement `/.well-known/jwks.json`
-- [ ] Return public keys from KV
+#### Task 4.1: Discovery & JWKS ✅
+- [x] Implement `/.well-known/openid-configuration` (Cached in KV)
+- [x] Implement `/.well-known/jwks.json` (Public Keys from KV)
+- [x] Add Cache-Control headers with 1 hour TTL
+- [x] Generate and cache RSA signing key on first request
 
 #### Task 4.2: Authorization Endpoint
 - [ ] Implement `/authorize` endpoint
