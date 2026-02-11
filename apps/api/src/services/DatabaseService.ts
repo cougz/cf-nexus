@@ -106,4 +106,12 @@ export class DatabaseService {
       .bind(counter, credentialId)
       .run()
   }
+
+  async getAllUserIds(): Promise<string[]> {
+    const result = await this.db.prepare('SELECT DISTINCT user_id FROM credentials').all()
+
+    return (result.results || []).map(
+      (row: unknown) => (row as Record<string, unknown>).user_id as string
+    )
+  }
 }

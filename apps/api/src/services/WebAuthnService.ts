@@ -1,3 +1,5 @@
+import { server } from '@passwordless-id/webauthn'
+
 export interface RegistrationOptions {
   username: string
   challenge: string
@@ -57,12 +59,22 @@ export async function generateRegistrationOptions(options: RegistrationOptions) 
 }
 
 export async function verifyRegistration(
-  _attestation: unknown,
-  _options: VerifyRegistrationOptions
+  attestation: unknown,
+  options: VerifyRegistrationOptions
 ): Promise<{ verified: boolean; credentialId?: string }> {
-  return {
-    verified: true,
-    credentialId: 'test-credential-id',
+  try {
+    const result = await server.verifyRegistration(attestation as any, {
+      challenge: options.challenge,
+      origin: options.origin,
+      rpId: 'nexus',
+    })
+    return {
+      verified: result.verified,
+      credentialId: result.credentialId,
+    }
+  } catch (error) {
+    console.error('Registration verification failed:', error)
+    return { verified: false }
   }
 }
 
@@ -81,10 +93,18 @@ export async function generateAuthenticationOptions(options: AuthenticationOptio
 }
 
 export async function verifyAuthentication(
-  _assertion: unknown,
-  _options: VerifyAuthenticationOptions
+  assertion: unknown,
+  options: VerifyAuthenticationOptions
 ): Promise<{ verified: boolean }> {
-  return {
-    verified: true,
+  try {
+    const result = await server.verifyAuthentication(assertion as any, {
+      challenge: options.challenge,
+      origin: options.origin,
+      rpId: 'nexus',
+    })
+    return { verified: result.verified }
+  } catch (error) {
+    console.error('Authentication verification failed:', error)
+    return { verified: false }
   }
 }

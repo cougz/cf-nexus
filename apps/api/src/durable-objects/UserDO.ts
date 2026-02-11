@@ -1,6 +1,7 @@
 export interface User {
   id: string
   username: string
+  isAdmin: boolean
   createdAt: string
 }
 
@@ -28,11 +29,12 @@ export class UserDO implements DurableObject {
     this.state = state
   }
 
-  async createUser(data: { username: string }): Promise<User> {
+  async createUser(data: { username: string; isAdmin?: boolean }): Promise<User> {
     const id = crypto.randomUUID()
     const user = {
       id,
       username: data.username,
+      isAdmin: data.isAdmin || false,
       createdAt: new Date().toISOString(),
     }
 

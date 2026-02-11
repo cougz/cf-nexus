@@ -55,7 +55,6 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
       successDiv.classList.add('hidden')
 
       try {
-        // Step 1: Get login options
         const optionsRes = await fetch(`${API_URL}/auth/login/options`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -69,50 +68,90 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
 
         const options = await optionsRes.json()
 
-        // Step 2: Call WebAuthn authentication
-        const credential = await navigator.credentials.get({
-          publicKey: {
-            challenge: new TextEncoder().encode(options.challenge),
-            rpId: options.rpId || window.location.hostname,
-            allowCredentials: options.allowCredentials?.map((cred: any) => ({
-              id: new Uint8Array(cred.id.split('').map(c => c.charCodeAt(0))),
-              type: 'public-key',
-              transports: cred.transports,
-            })),
-            userVerification: 'preferred',
-            timeout: 60000,
-          },
-        })
+        if (options.action === 'register') {
+          const credential = await navigator.credentials.create({
+            publicKey: {
+              rp: { id: options.rp.id, name: options.rp.name },
+              user: {
+                id: new TextEncoder().encode(options.user.id),
+                name: options.user.name,
+                displayName: options.user.displayName,
+              },
+              challenge: new TextEncoder().encode(options.challenge),
+              pubKeyCredParams: options.pubKeyCredParams,
+              timeout: options.timeout || 60000,
+              attestation: options.attestation,
+              authenticatorSelection: options.authenticatorSelection,
+            },
+          })
 
-        if (!credential) {
-          throw new Error('Authentication cancelled')
+          if (!credential) {
+            throw new Error('Registration cancelled')
+          }
+
+          const verifyRes = await fetch(`${API_URL}/auth/register/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              attestation: credential,
+              challenge: options.challenge,
+            }),
+          })
+
+          if (!verifyRes.ok) {
+            const error = await verifyRes.json()
+            throw new Error(error.error?.message || 'Registration failed')
+          }
+
+          const result = await verifyRes.json()
+          successDiv.textContent = `Account created for ${result.user.username}! Redirecting...`
+          successDiv.classList.remove('hidden')
+
+          setTimeout(() => {
+            window.location.href = '/profile'
+          }, 1500)
+        } else {
+          const credential = await navigator.credentials.get({
+            publicKey: {
+              challenge: new TextEncoder().encode(options.challenge),
+              rpId: options.rpId || window.location.hostname,
+              allowCredentials: options.allowCredentials?.map((cred: any) => ({
+                id: new Uint8Array(cred.id.split('').map(c => c.charCodeAt(0))),
+                type: 'public-key',
+                transports: cred.transports,
+              })),
+              userVerification: 'preferred',
+              timeout: 60000,
+            },
+          })
+
+          if (!credential) {
+            throw new Error('Authentication cancelled')
+          }
+
+          const verifyRes = await fetch(`${API_URL}/auth/login/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              assertion: credential,
+              challenge: options.challenge,
+            }),
+          })
+
+          if (!verifyRes.ok) {
+            const error = await verifyRes.json()
+            throw new Error(error.error?.message || 'Authentication failed')
+          }
+
+          const result = await verifyRes.json()
+          successDiv.textContent = `Welcome, ${result.user.username}! Redirecting...`
+          successDiv.classList.remove('hidden')
+
+          setTimeout(() => {
+            window.location.href = '/profile'
+          }, 1500)
         }
-
-        // Step 3: Verify assertion
-        const verifyRes = await fetch(`${API_URL}/auth/login/verify`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            assertion: credential,
-            challenge: options.challenge,
-          }),
-        })
-
-        if (!verifyRes.ok) {
-          const error = await verifyRes.json()
-          throw new Error(error.error?.message || 'Authentication failed')
-        }
-
-        const result = await verifyRes.json()
-        successDiv.textContent = `Welcome, ${result.user.username}! Redirecting...`
-        successDiv.classList.remove('hidden')
-
-        // Redirect to profile page after successful login
-        setTimeout(() => {
-          window.location.href = '/profile'
-        }, 1500)
-
       } catch (err: any) {
         errorDiv.textContent = err.message || 'Authentication failed'
         errorDiv.classList.remove('hidden')

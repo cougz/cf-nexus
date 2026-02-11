@@ -105,10 +105,14 @@ auth.post('/register/verify', async c => {
   const userDOId = c.env.UserDO.idFromName(challengeData.username)
   const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
 
-  let user: { id: string; username: string; createdAt: string } | null = null
+  let user: { id: string; username: string; isAdmin: boolean; createdAt: string } | null = null
+
+  const db = new DatabaseService(c.env.DB)
+  const existingUserIds = await db.getAllUserIds()
+  const isFirstUser = existingUserIds.length === 0
 
   try {
-    user = await userDO.createUser({ username: challengeData.username })
+    user = await userDO.createUser({ username: challengeData.username, isAdmin: isFirstUser })
   } catch {
     await challengeService.deleteChallenge(body.challenge)
     return c.json(
@@ -116,8 +120,6 @@ auth.post('/register/verify', async c => {
       { status: 400 }
     )
   }
-
-  const db = new DatabaseService(c.env.DB)
 
   try {
     const attestation = body.attestation as {
@@ -164,7 +166,7 @@ auth.post('/login/options', async c => {
   const userDOId = c.env.UserDO.idFromName(username)
   const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
 
-  let user: { id: string; username: string; createdAt: string } | null = null
+  let user: { id: string; username: string; isAdmin: boolean; createdAt: string } | null = null
 
   try {
     user = await userDO.getUserByUsername(username)
@@ -176,10 +178,41 @@ auth.post('/login/options', async c => {
   }
 
   if (!user) {
-    return c.json(
-      { error: { message: 'Invalid request', code: 'INVALID_REQUEST' } },
-      { status: 400 }
-    )
+    const db = new DatabaseService(c.env.DB)
+    const existingUserIds = await db.getAllUserIds()
+    const hasAdmin = existingUserIds.length > 0
+
+    if (hasAdmin) {
+      return c.json(
+        {
+          error: {
+            message: 'Registration closed. Contact administrator.',
+            code: 'REGISTRATION_CLOSED',
+          },
+        },
+        { status: 403 }
+      )
+    }
+
+    const challenge = await generateChallenge()
+    const userId = crypto.randomUUID()
+
+    const registrationOptions = await generateRegistrationOptions({
+      username,
+      userId,
+      challenge,
+      timeout: 60000,
+    })
+
+    const challengeService = new ChallengeService(c.env.KV)
+    await challengeService.storeChallenge({
+      username,
+      challenge,
+      type: 'registration',
+      createdAt: new Date().toISOString(),
+    })
+
+    return c.json({ action: 'register', ...registrationOptions })
   }
 
   const db = new DatabaseService(c.env.DB)
@@ -210,7 +243,7 @@ auth.post('/login/options', async c => {
     createdAt: new Date().toISOString(),
   })
 
-  return c.json(authenticationOptions)
+  return c.json({ action: 'authenticate', ...authenticationOptions })
 })
 
 auth.post('/login/verify', async c => {

@@ -52,7 +52,7 @@ describe('WebAuthnService', () => {
   })
 
   describe('verifyRegistration', () => {
-    it('should verify valid registration attestation', async () => {
+    it('should fail verification for invalid attestation data', async () => {
       const { verifyRegistration } = await import('../src/services/WebAuthnService')
 
       const attestation = {
@@ -71,7 +71,7 @@ describe('WebAuthnService', () => {
 
       expect(result).toBeDefined()
       expect(result).toHaveProperty('verified')
-      expect(result.verified).toBe(true)
+      expect(result.verified).toBe(false)
     })
   })
 
@@ -103,7 +103,7 @@ describe('WebAuthnService', () => {
   })
 
   describe('verifyAuthentication', () => {
-    it('should verify valid authentication assertion', async () => {
+    it('should fail verification for invalid assertion data', async () => {
       const { verifyAuthentication } = await import('../src/services/WebAuthnService')
 
       const assertion = {
@@ -124,7 +124,7 @@ describe('WebAuthnService', () => {
 
       expect(result).toBeDefined()
       expect(result).toHaveProperty('verified')
-      expect(result.verified).toBe(true)
+      expect(result.verified).toBe(false)
     })
   })
 })
