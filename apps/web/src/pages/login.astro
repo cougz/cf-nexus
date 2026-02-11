@@ -54,21 +54,35 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
       errorDiv.classList.add('hidden')
       successDiv.classList.add('hidden')
 
+      console.log('Starting login process for:', username)
+
       try {
+        console.log('Step 1: Getting login options...')
         const optionsRes = await fetch(`${API_URL}/auth/login/options`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username }),
         })
 
+        console.log('Response status:', optionsRes.status)
+
         if (!optionsRes.ok) {
           const error = await optionsRes.json()
+          console.error('Options error:', error)
           throw new Error(error.error?.message || 'Failed to get login options')
         }
 
         const options = await optionsRes.json()
+        console.log('Received options:', options.action)
 
         if (options.action === 'register') {
+          console.log('Starting registration flow...')
+
+          if (!navigator.credentials) {
+            throw new Error('WebAuthn is not supported in this browser')
+          }
+
+          console.log('Calling navigator.credentials.create...')
           const credential = await navigator.credentials.create({
             publicKey: {
               rp: { id: options.rp.id, name: options.rp.name },
@@ -89,6 +103,8 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
             throw new Error('Registration cancelled')
           }
 
+          console.log('Credential created, verifying...')
+
           const verifyRes = await fetch(`${API_URL}/auth/register/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -98,8 +114,11 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
             }),
           })
 
+          console.log('Verify response status:', verifyRes.status)
+
           if (!verifyRes.ok) {
             const error = await verifyRes.json()
+            console.error('Verification error:', error)
             throw new Error(error.error?.message || 'Registration failed')
           }
 
@@ -110,7 +129,15 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
           setTimeout(() => {
             window.location.href = '/profile'
           }, 1500)
-        } else {
+        } else if (options.action === 'authenticate') {
+          console.log('Starting authentication flow...')
+
+          if (!navigator.credentials) {
+            throw new Error('WebAuthn is not supported in this browser')
+          }
+
+          console.log('Calling navigator.credentials.get...')
+
           const credential = await navigator.credentials.get({
             publicKey: {
               challenge: new TextEncoder().encode(options.challenge),
@@ -129,6 +156,8 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
             throw new Error('Authentication cancelled')
           }
 
+          console.log('Credential retrieved, verifying...')
+
           const verifyRes = await fetch(`${API_URL}/auth/login/verify`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -139,8 +168,11 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
             }),
           })
 
+          console.log('Verify response status:', verifyRes.status)
+
           if (!verifyRes.ok) {
             const error = await verifyRes.json()
+            console.error('Verification error:', error)
             throw new Error(error.error?.message || 'Authentication failed')
           }
 
@@ -151,8 +183,11 @@ const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.work
           setTimeout(() => {
             window.location.href = '/profile'
           }, 1500)
+        } else {
+          throw new Error(`Unknown action: ${options.action}`)
         }
       } catch (err: any) {
+        console.error('Error during authentication:', err)
         errorDiv.textContent = err.message || 'Authentication failed'
         errorDiv.classList.remove('hidden')
       }
