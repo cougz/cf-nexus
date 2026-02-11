@@ -154,7 +154,6 @@ app.route('/simple', simpleAuth)
 app.route('/auth', auth)
 app.route('/authorize', authorize)
 app.route('/debug', debug)
-app.route('/simple', simpleAuth)
 app.route('/token', token)
 app.route('/userinfo', userinfo)
 
