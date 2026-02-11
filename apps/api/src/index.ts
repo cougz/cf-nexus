@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
 import auth from './routes/auth'
+import debug from './routes/debug'
 import simpleAuth from './routes/simple-auth'
 
 export { UserDO }
@@ -72,5 +73,6 @@ app.get('/health', c => {
 app.route('/simple', simpleAuth)
 
 app.route('/auth', auth)
+app.route('/debug', debug)
 
 export default app
