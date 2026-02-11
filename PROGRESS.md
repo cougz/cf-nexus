@@ -301,7 +301,15 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - Discovery and JWKS endpoints return proper configuration
 - Test client (test-client) available for development
 
-**Milestone 5:** ⚠️ **IN PROGRESS**
+**Milestone 5:** ✅ **COMPLETE**
+- ✅ Astro Setup (Tailwind, Nano Stores, PUBLIC_API_URL)
+- ✅ Login Page (username form, WebAuthn integration)
+- ✅ Consent Page (scope display, Authorize/Cancel buttons)
+- ✅ Profile Dashboard (sessions, security info)
+- ✅ Logout functionality (POST /auth/logout)
+- ✅ Deploy Frontend (CI successful)
+
+**Milestone 6:** ⚠️ **IN PROGRESS**
 
 ---
 
