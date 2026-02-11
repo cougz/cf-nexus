@@ -319,6 +319,42 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 
 ---
 
+## 🚀 Recent Updates
+
+### WebAuthn Refactoring (February 11, 2026)
+
+Implemented real WebAuthn verification and admin-first user creation:
+
+**Phase 1: Fix WebAuthn Verification** ✅
+- Replaced mock `verifyRegistration()` and `verifyAuthentication()` with real implementation using `@passwordless-id/webauthn` library
+- Both functions now properly verify WebAuthn attestation and assertion responses
+- Updated tests to reflect real verification behavior
+
+**Phase 2: Admin-First User Creation** ✅
+- Added `isAdmin` flag to User interface in UserDurableObject
+- Updated `createUser()` method to accept optional `isAdmin` parameter
+- Auto-assigns admin privileges to first registered user
+- Checks for existing users before allowing registration
+
+**Phase 3: Improve Login Flow** ✅
+- Updated `/login/options` endpoint to detect new vs existing users
+- Returns registration options for new users (if no admin exists)
+- Returns authentication options for existing users
+- Closes registration after first user becomes admin
+
+**Phase 4: Frontend Updates** ✅
+- Updated login.astro to handle both register and authenticate actions
+- Frontend now checks `action` field from server response
+- Calls `navigator.credentials.create()` for new users
+- Calls `navigator.credentials.get()` for existing users
+
+**Test Results:**
+- All 58 tests passing
+- No regressions introduced
+- Linting: 2 minor warnings (acceptable for external library types)
+
+---
+
 ## 📝 Recent Commit History
 
 1. `docs: add PROJECT_PLAN.md with complete implementation specification` - Created comprehensive implementation guide
@@ -368,5 +404,5 @@ Once token is fixed, CI will automatically:
 
 ---
 
-**Last Updated:** February 1, 2026
-**Next Update:** After completing Milestone 2
+**Last Updated:** February 11, 2026
+**Next Update:** After WebAuthn refactoring complete

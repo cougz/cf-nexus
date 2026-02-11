@@ -63,11 +63,15 @@ export async function verifyRegistration(
   options: VerifyRegistrationOptions
 ): Promise<{ verified: boolean; credentialId?: string }> {
   try {
-    const result = await server.verifyRegistration(attestation as any, {
-      challenge: options.challenge,
-      origin: options.origin,
-      rpId: 'nexus',
-    })
+    const result = await server.verifyRegistration(
+      // biome-ignore lint/suspicious/noExplicitAny: External library has complex types
+      attestation as any,
+      {
+        challenge: options.challenge,
+        origin: options.origin,
+        rpId: 'nexus',
+      }
+    )
     return {
       verified: result.verified,
       credentialId: result.credentialId,
@@ -97,11 +101,15 @@ export async function verifyAuthentication(
   options: VerifyAuthenticationOptions
 ): Promise<{ verified: boolean }> {
   try {
-    const result = await server.verifyAuthentication(assertion as any, {
-      challenge: options.challenge,
-      origin: options.origin,
-      rpId: 'nexus',
-    })
+    const result = await server.verifyAuthentication(
+      // biome-ignore lint/suspicious/noExplicitAny: External library has complex types
+      assertion as any,
+      {
+        challenge: options.challenge,
+        origin: options.origin,
+        rpId: 'nexus',
+      }
+    )
     return { verified: result.verified }
   } catch (error) {
     console.error('Authentication verification failed:', error)
