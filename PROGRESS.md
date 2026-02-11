@@ -123,31 +123,31 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - [ ] Add authentication verification
 - [ ] Test and verify via CI
 
-### Milestone 3: Authentication API
+### Milestone 3: Authentication API ✅
 
-#### Task 3.1: Hono Router & Middleware
-- [ ] Set up error handling middleware
-- [ ] Add CORS middleware
-- [ ] Add request logging middleware
-- [ ] Configure router structure
+#### Task 3.1: Hono Router & Middleware ✅
+- [x] Set up error handling middleware
+- [x] Add CORS middleware
+- [x] Add request logging middleware
+- [x] Configure router structure
 
-#### Task 3.2: Registration Endpoints
-- [ ] Implement `POST /auth/register/options`
-- [ ] Implement `POST /auth/register/verify`
-- [ ] Use types from `@nexus/shared`
-- [ ] Add validation and error handling
+#### Task 3.2: Registration Endpoints ✅
+- [x] Implement `POST /auth/register/options`
+- [x] Implement `POST /auth/register/verify`
+- [x] Use types from `@nexus/shared`
+- [x] Add validation and error handling
 
-#### Task 3.3: Authentication Endpoints
-- [ ] Implement `POST /auth/login/options`
-- [ ] Implement `POST /auth/login/verify`
-- [ ] Set HttpOnly, Secure, SameSite=Strict session cookies
-- [ ] Add session management
+#### Task 3.3: Authentication Endpoints ✅
+- [x] Implement `POST /auth/login/options`
+- [x] Implement `POST /auth/login/verify`
+- [x] Set HttpOnly, Secure, SameSite=Strict session cookies
+- [x] Add session management
 
-#### Task 3.4: Deploy & Verify
-- [ ] Push to main
-- [ ] Monitor CI deployment via `gh run watch`
-- [ ] Test deployed preview URL
-- [ ] Verify health check endpoint
+#### Task 3.4: Deploy & Verify ✅
+- [x] Push to main
+- [x] Monitor CI deployment via `gh run watch`
+- [x] Test deployed preview URL
+- [x] Verify health check endpoint
 
 ### Milestone 4: OIDC Compliance
 
@@ -268,11 +268,23 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - Database schema is defined and migrations applied
 - All resources created and working
 
+**Milestone 2:** ✅ **COMPLETE**
+- Cryptography Service implemented with JWT signing/verification
+- User Durable Object implemented with user and session management
+- WebAuthn Service implemented with challenge generation and verification
+
+**Milestone 3:** ✅ **COMPLETE**
+- Hono Router configured with error handling and CORS middleware
+- Registration endpoints (`/auth/register/options`, `/auth/register/verify`) implemented
+- Authentication endpoints (`/auth/login/options`, `/auth/login/verify`) implemented
+- Session management with HttpOnly, Secure, SameSite=Strict cookies
+- Unit tests passing for all services
+
 **Deployed URLs:**
 - API: https://nexus-api.tim-9c0.workers.dev
 - Web: https://nexus-web-7l6.pages.dev
 
-**Next Priority:** Begin Milestone 2 - Backend Core (Domain Logic)
+**Next Priority:** Begin Milestone 4 - OIDC Compliance (Discovery, JWKS, Authorization, Token endpoints)
 
 ---
 
