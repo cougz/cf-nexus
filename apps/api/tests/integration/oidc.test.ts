@@ -30,8 +30,10 @@ describe('OIDC Discovery Endpoint Tests', () => {
   it('should include Cache-Control header', async () => {
     const response = await fetch(`${API_URL}/.well-known/openid-configuration`)
 
-    expect(response.headers.get('Cache-Control')).toContain('public')
-    expect(response.headers.get('Cache-Control')).toContain('max-age=3600')
+    const cacheControl = response.headers.get('Cache-Control')
+    expect(cacheControl).not.toBeNull()
+    expect(cacheControl).toContain('public')
+    expect(cacheControl).toContain('max-age=3600')
   })
 })
 
@@ -51,7 +53,7 @@ describe('JWKS Endpoint Tests', () => {
     const response = await fetch(`${API_URL}/.well-known/jwks.json`)
     const jwks = await response.json()
 
-    if (jwks.keys.length > 0) {
+    if (jwks.keys && jwks.keys.length > 0) {
       const key = jwks.keys[0]
       expect(key).toHaveProperty('kty')
       expect(key).toHaveProperty('use')
@@ -65,7 +67,9 @@ describe('JWKS Endpoint Tests', () => {
   it('should include Cache-Control header', async () => {
     const response = await fetch(`${API_URL}/.well-known/jwks.json`)
 
-    expect(response.headers.get('Cache-Control')).toContain('public')
-    expect(response.headers.get('Cache-Control')).toContain('max-age=3600')
+    const cacheControl = response.headers.get('Cache-Control')
+    expect(cacheControl).not.toBeNull()
+    expect(cacheControl).toContain('public')
+    expect(cacheControl).toContain('max-age=3600')
   })
 })
