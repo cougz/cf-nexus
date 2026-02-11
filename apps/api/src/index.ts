@@ -4,6 +4,8 @@ import auth from './routes/auth'
 import authorize from './routes/authorize'
 import debug from './routes/debug'
 import simpleAuth from './routes/simple-auth'
+import token from './routes/token'
+import userinfo from './routes/userinfo'
 
 export { UserDO }
 
@@ -131,7 +133,9 @@ app.get('/.well-known/jwks.json', async c => {
   if (!privateKey) {
     const keyPair = await generateKeyPair()
     privateKey = keyPair.privateKey
+    const publicKey = keyPair.publicKey
     await c.env.KV.put(keyCacheKey, privateKey)
+    await c.env.KV.put('oidc:public_key', publicKey)
   }
 
   const jwks = await getJWKS(privateKey)
@@ -151,5 +155,7 @@ app.route('/auth', auth)
 app.route('/authorize', authorize)
 app.route('/debug', debug)
 app.route('/simple', simpleAuth)
+app.route('/token', token)
+app.route('/userinfo', userinfo)
 
 export default app
