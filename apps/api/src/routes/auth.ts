@@ -255,7 +255,7 @@ auth.post('/login/verify', async c => {
 
   try {
     const session = await userDO.createSession(86400000)
-    sessionId = session.id
+    sessionId = session.token
     user = await userDO.getUser(session.userId)
   } catch {
     await challengeService.deleteChallenge(body.challenge)
@@ -269,13 +269,10 @@ auth.post('/login/verify', async c => {
 
   // Set HttpOnly, Secure, SameSite=Strict session cookie
   if (sessionId) {
-    c.cookie('session', sessionId, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'Strict',
-      path: '/',
-      maxAge: 86400, // 24 hours
-    })
+    c.header(
+      'Set-Cookie',
+      `session=${sessionId}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=86400`
+    )
   }
 
   return c.json({ user })
