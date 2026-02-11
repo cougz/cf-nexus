@@ -1,5 +1,5 @@
 -- Add test OIDC client for development/testing
-INSERT INTO oidc_clients (id, name, secret, redirect_uris, scopes)
+INSERT OR IGNORE INTO oidc_clients (id, name, secret, redirect_uris, scopes)
 VALUES (
   'test-client',
   'Test OIDC Client',
