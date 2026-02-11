@@ -1,8 +1,6 @@
 # Nexus OIDC Provider
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cougz/cf-nexus)
-[![Tests](https://img.shields.io/github/actions/workflow/status/cougz/cf-nexus/CI%2FCD?label=tests)](https://github.com/cougz/cf-nexus/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A Cloudflare-based OIDC authentication provider with WebAuthn (passkey) support.
 
