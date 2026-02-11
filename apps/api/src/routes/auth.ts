@@ -278,4 +278,27 @@ auth.post('/login/verify', async c => {
   return c.json({ user })
 })
 
+auth.post('/logout', async c => {
+  const sessionCookie = c.req.header('Cookie') || ''
+  const sessionId = sessionCookie
+    .split(';')
+    .find(c => c.trim().startsWith('session='))
+    ?.split('=')[1]
+
+  if (sessionId) {
+    const userDOId = c.env.UserDO.idFromName(`user-${sessionId}`)
+    const userDO = c.env.UserDO.get(userDOId) as unknown as UserDO
+
+    try {
+      await userDO.revokeSession(sessionId)
+    } catch {
+      // Ignore errors on session revocation
+    }
+  }
+
+  c.header('Set-Cookie', 'session=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0')
+
+  return c.json({ message: 'Logged out successfully' })
+})
+
 export default auth

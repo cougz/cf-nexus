@@ -28,39 +28,38 @@ import Layout from '../layouts/Layout.astro'
         <div class="flex justify-between">
           <span>Cookie Security:</span>
           <span class="text-green-400">HttpOnly, Secure, SameSite=Strict</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-gray-800 rounded-lg p-6">
-      <h2 class="text-xl font-semibold mb-4">Next Steps</h2>
-      <ul class="space-y-2 text-gray-300">
-        <li class="flex items-center">
-          <span class="text-yellow-400 mr-2">⏳</span>
-          OIDC Discovery & JWKS endpoints (Milestone 4)
-        </li>
-        <li class="flex items-center">
-          <span class="text-yellow-400 mr-2">⏳</span>
-          Authorization and Token endpoints (Milestone 4)
-        </li>
-        <li class="flex items-center">
-          <span class="text-yellow-400 mr-2">⏳</span>
-          Consent page for OAuth/OIDC clients (Milestone 5)
-        </li>
-        <li class="flex items-center">
-          <span class="text-yellow-400 mr-2">⏳</span>
-          Security headers and rate limiting (Milestone 6)
-        </li>
-      </ul>
-    </div>
-
-    <div class="mt-6 flex space-x-4">
-      <button
-        onclick="window.location.href = '/login'"
-        class="bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition"
-      >
-        Back to Login
-      </button>
     </div>
   </div>
 </Layout>
+
+<script>
+  document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    const messageDiv = document.getElementById('message')!
+
+    try {
+      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.workers.dev'
+
+      const response = await fetch(`${API_URL}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        throw new Error('Logout failed')
+      }
+
+      messageDiv.textContent = 'Logged out successfully. Redirecting...'
+      messageDiv.classList.remove('hidden')
+
+      setTimeout(() => {
+        window.location.href = '/'
+      }, 1500)
+    } catch (err) {
+      messageDiv.textContent = 'Logout failed. Please try again.'
+      messageDiv.classList.remove('hidden')
+      messageDiv.classList.replace('bg-green-900/50', 'bg-red-900/50')
+      messageDiv.classList.replace('border-green-700', 'border-red-700')
+      messageDiv.classList.replace('text-green-300', 'text-red-300')
+    }
+  })
+</script>

@@ -1,0 +1,139 @@
+---
+import Layout from '../layouts/Layout.astro'
+
+const apiUrl = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.workers.dev'
+
+interface OAuthParams {
+  client_id: string
+  redirect_uri: string
+  scope: string
+  state: string
+}
+
+// Get OAuth params from URL query params
+const params = Astro.url.searchParams
+const oauthParams = {
+  client_id: params.get('client_id') || '',
+  redirect_uri: params.get('redirect_uri') || '',
+  scope: params.get('scope') || 'openid',
+  state: params.get('state') || '',
+}
+
+// Validate required params
+const missingParams = !oauthParams.client_id || !oauthParams.redirect_uri
+---
+
+<Layout title="Authorize">
+  {missingParams ? (
+    <div class="max-w-md mx-auto">
+      <div class="bg-red-900/50 border border-red-700 rounded-lg p-6">
+        <h1 class="text-2xl font-bold mb-4 text-red-300">Authorization Error</h1>
+        <p class="text-red-200 mb-4">
+          Missing required parameters: client_id or redirect_uri
+        </p>
+        <a
+          href="/login"
+          class="inline-block bg-red-700 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg transition"
+        >
+          Return to Login
+        </a>
+      </div>
+    </div>
+  ) : (
+    <div class="max-w-2xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6">Authorize Application</h1>
+
+      <div class="bg-gray-800 rounded-lg p-6 mb-6">
+        <p class="text-gray-300 mb-4">
+          <span class="font-semibold">{oauthParams.client_id}</span> is requesting
+          access to your account:
+        </p>
+
+        <h2 class="text-lg font-semibold mb-3 text-gray-200">Permissions</h2>
+        <ul class="space-y-2 mb-6">
+          {oauthParams.scope.split(' ').map((scope) => (
+            <li key={scope} class="flex items-start">
+              <span class="text-green-400 mr-2 mt-1">✓</span>
+              <div>
+                <span class="font-medium text-white">
+                  {scope === 'openid' && 'OpenID Connect'}
+                  {scope === 'profile' && 'View your profile information'}
+                  {scope === 'email' && 'Access your email address'}
+                </span>
+                <p class="text-sm text-gray-400 mt-1">
+                  {scope === 'openid' &&
+                    'Allow the application to verify your identity.'}
+                  {scope === 'profile' &&
+                    'Allow the application to access your username and profile data.'}
+                  {scope === 'email' &&
+                    'Allow the application to access your email address.'}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <h2 class="text-lg font-semibold mb-3 text-gray-200">Redirect URL</h2>
+        <code class="block bg-gray-900 p-3 rounded text-sm text-gray-300 break-all">
+          {oauthParams.redirect_uri}
+        </code>
+      </div>
+
+      <form id="authorizeForm" class="flex space-x-4">
+        <input type="hidden" name="client_id" value={oauthParams.client_id} />
+        <input type="hidden" name="redirect_uri" value={oauthParams.redirect_uri} />
+        <input type="hidden" name="scope" value={oauthParams.scope} />
+        <input type="hidden" name="state" value={oauthParams.state} />
+
+        <button
+          type="submit"
+          class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition"
+        >
+          Authorize
+        </button>
+
+        <a
+          href="/"
+          class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition text-center flex items-center justify-center"
+        >
+          Cancel
+        </a>
+      </form>
+
+      <div id="error" class="mt-4 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-300 hidden"></div>
+    </div>
+  )}
+</Layout>
+
+<script>
+  const API_URL = '{{ apiUrl }}'
+
+  document.getElementById('authorizeForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const form = e.target as HTMLFormElement
+    const formData = new FormData(form)
+
+    const client_id = formData.get('client_id') as string
+    const redirect_uri = formData.get('redirect_uri') as string
+    const scope = formData.get('scope') as string
+    const state = formData.get('state') as string
+
+    const errorDiv = document.getElementById('error')!
+    errorDiv.classList.add('hidden')
+
+    try {
+      // Redirect to authorization endpoint
+      const authUrl = new URL('/authorize', API_URL)
+      authUrl.searchParams.set('response_type', 'code')
+      authUrl.searchParams.set('client_id', client_id)
+      authUrl.searchParams.set('redirect_uri', redirect_uri)
+      authUrl.searchParams.set('scope', scope)
+      authUrl.searchParams.set('state', state)
+
+      window.location.href = authUrl.toString()
+    } catch (err: any) {
+      errorDiv.textContent = err.message || 'Authorization failed'
+      errorDiv.classList.remove('hidden')
+    }
+  })
+</script>

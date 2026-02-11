@@ -283,23 +283,25 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - Session management with HttpOnly, Secure, SameSite=Strict cookies
 - Unit tests passing for all services
 
-**Milestone 4:** ⚠️ **IN PROGRESS**
+**Milestone 4:** ✅ **COMPLETE**
 - ✅ OIDC Discovery endpoint (/.well-known/openid-configuration) - DEPLOYED & WORKING
 - ✅ JWKS endpoint (/.well-known/jwks.json) - DEPLOYED & WORKING
-- ✅ Authorization endpoint (/authorize) - DEPLOYED & WORKING (returns proper OIDC errors)
-- ✅ Token endpoint (/token) - DEPLOYED & WORKING (returns proper OIDC errors)
-- ✅ UserInfo endpoint (/userinfo) - DEPLOYED & WORKING (returns proper OIDC errors)
+- ✅ Authorization endpoint (/authorize) - DEPLOYED & WORKING
+- ✅ Token endpoint (/token) - DEPLOYED & WORKING
+- ✅ UserInfo endpoint (/userinfo) - DEPLOYED & WORKING
+- ✅ Test OIDC client added to D1 database
 
 **Deployed URLs:**
 - API: https://nexus-api.tim-9c0.workers.dev
 - Web: https://nexus-web-7l6.pages.dev
 
-**Routing Issue RESOLVED:**
-- Fixed TypeScript compilation errors in OIDC endpoints
-- Fixed Durable Object UserDO export (removed type-only export)
-- All OIDC endpoints now reachable and returning proper responses
+**Completed Testing:**
+- All OIDC endpoints verified working
+- Authorization endpoint redirects to login when unauthenticated
+- Discovery and JWKS endpoints return proper configuration
+- Test client (test-client) available for development
 
-**Next Priority:** Complete OIDC integration testing with real client
+**Milestone 5:** ⚠️ **IN PROGRESS**
 
 ---
 
