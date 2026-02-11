@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { UserDO } from './durable-objects/UserDO'
+import { rateLimit } from './middleware/rateLimit'
 import auth from './routes/auth'
 import authorize from './routes/authorize'
 import debug from './routes/debug'
@@ -54,6 +55,16 @@ app.use('*', async (c, next) => {
     return c.newResponse(null, { status: 204 })
   }
   return next()
+})
+
+app.use('*', async (c, next) => {
+  await next()
+
+  c.header('X-Content-Type-Options', 'nosniff')
+  c.header('X-Frame-Options', 'DENY')
+  c.header('X-XSS-Protection', '1; mode=block')
+  c.header('Referrer-Policy', 'strict-origin-when-cross-origin')
+  c.header('Permissions-Policy', 'geolocation=(), microphone=(), camera=()')
 })
 
 app.onError((err, c) => {
@@ -145,6 +156,12 @@ app.get('/.well-known/jwks.json', async c => {
     },
   })
 })
+
+app.use('/authorize', rateLimit({ windowMs: 60000, maxRequests: 20 }))
+
+app.use('/token', rateLimit({ windowMs: 60000, maxRequests: 10 }))
+
+app.use('/auth/*', rateLimit({ windowMs: 60000, maxRequests: 30 }))
 
 app.get('/authorize', async c => {
   const { response_type, client_id, redirect_uri, scope, state } = c.req.query()
