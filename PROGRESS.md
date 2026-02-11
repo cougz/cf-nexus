@@ -149,32 +149,35 @@ This document tracks the current implementation status of Project Nexus, a Cloud
 - [x] Test deployed preview URL
 - [x] Verify health check endpoint
 
-### Milestone 4: OIDC Compliance
+### Milestone 4: OIDC Compliance (In Progress)
 
 #### Task 4.1: Discovery & JWKS ✅
 - [x] Implement `/.well-known/openid-configuration` (Cached in KV)
 - [x] Implement `/.well-known/jwks.json` (Public Keys from KV)
 - [x] Add Cache-Control headers with 1 hour TTL
 - [x] Generate and cache RSA signing key on first request
+- [x] Deploy and verified working endpoints
 
-#### Task 4.2: Authorization Endpoint
-- [ ] Implement `/authorize` endpoint
-- [ ] Validate client and redirect URI
-- [ ] Check session cookie
-- [ ] Issue auth codes stored in DO
-- [ ] Redirect to Astro login if no session
+#### Task 4.2: Authorization Endpoint (Deployed, investigating issues)
+- [x] Implement `/authorize` endpoint
+- [x] Validate client and redirect URI
+- [x] Check session cookie
+- [x] Issue auth codes stored in KV
+- [x] Redirect to login page for unauthenticated users
+- [ ] Verify deployment works correctly
 
-#### Task 4.3: Token Endpoint
-- [ ] Implement `/token` endpoint
-- [ ] Exchange auth code + PKCE for tokens
-- [ ] Generate ID and access tokens
-- [ ] Implement PKCE verification
+#### Task 4.3: Token Endpoint (Deployed, investigating issues)
+- [x] Implement `/token` endpoint
+- [x] Exchange auth code + PKCE for tokens
+- [x] Generate ID and access tokens
+- [x] Integrate with auth code system
+- [ ] Verify deployment works correctly
 
-#### Task 4.4: UserInfo Endpoint
-- [ ] Implement `/userinfo` endpoint
-- [ ] Validate access tokens
-- [ ] Return user claims
-- [ ] Test and verify via CI
+#### Task 4.4: UserInfo Endpoint (Deployed, investigating issues)
+- [x] Implement `/userinfo` endpoint
+- [x] Validate access tokens
+- [x] Return user claims
+- [ ] Verify deployment works correctly
 
 ### Milestone 5: Astro Frontend
 
