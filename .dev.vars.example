@@ -1,0 +1,6 @@
+# Example environment variables for local development
+# Do not commit this file - copy to .dev.vars and add your values
+
+# JWT Private Key for signing tokens
+# Generate with: openssl genrsa -out private.pem 2048
+JWT_PRIVATE_KEY=your-private-key-here

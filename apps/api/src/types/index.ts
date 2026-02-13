@@ -1,3 +1,5 @@
+// Types copied from packages/shared
+// Maintain synchronization between apps/api and apps/web
 import { z } from 'zod'
 
 export const UserSchema = z.object({

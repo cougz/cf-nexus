@@ -1,4 +1,3 @@
-import type { UserSchema } from '@nexus/shared'
 import { Hono } from 'hono'
 import type { UserDO } from '../durable-objects/UserDO'
 import { ChallengeService } from '../services/ChallengeService'
@@ -10,6 +9,7 @@ import {
   verifyAuthentication,
   verifyRegistration,
 } from '../services/WebAuthnService'
+import type { UserSchema } from '../types'
 
 type Env = {
   Bindings: {

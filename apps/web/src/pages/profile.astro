@@ -37,7 +37,7 @@ import Layout from '../layouts/Layout.astro'
     const messageDiv = document.getElementById('message')!
 
     try {
-      const API_URL = import.meta.env.PUBLIC_API_URL || 'https://nexus-api.tim-9c0.workers.dev'
+      const API_URL = import.meta.env.PUBLIC_API_URL
 
       const response = await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
