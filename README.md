@@ -5,8 +5,31 @@
 ### Step 1: Deploy API Worker
 [![Deploy API to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cougz/cf-nexus/tree/main/apps/api)
 
-### Step 2: Deploy Web Frontend
+Configure your Worker:
+- Enter Worker name (e.g., `nexus-api`)
+- Cloudflare will auto-provision D1 database and KV namespace
+- Deployed to temporary workers.dev URL
+
+### Step 2: Configure Custom Domain (API) - Optional but Recommended
+In Cloudflare dashboard, go to **Workers & Pages** → **Worker** → **Settings** → **Triggers** → **Custom Domains**:
+- Add custom domain (e.g., `api.yourdomain.com`)
+- Update DNS CNAME record
+
+### Step 3: Deploy Web Frontend
 [![Deploy Web to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cougz/cf-nexus/tree/main/apps/web)
+
+Configure your Web app:
+- Set `PUBLIC_API_URL` environment variable to your Worker's custom domain
+  - Example: `https://api.yourdomain.com`
+- Deployed to temporary pages.dev URL
+
+### Step 4: Configure Custom Domain (Web) - Optional but Recommended
+In Cloudflare dashboard, go to **Workers & Pages** → **Pages** → **Custom Domains**:
+- Add custom domain (e.g., `app.yourdomain.com`)
+- Update DNS CNAME record
+
+### Step 5: Test
+Your web app will now communicate with your API using the custom domains you configured.
 
 A Cloudflare-based OIDC authentication provider with WebAuthn (passkey) support.
 
